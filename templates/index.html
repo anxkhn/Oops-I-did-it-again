@@ -116,7 +116,8 @@
         <script>
             // Initialize CodeMirror with options
             var editor = CodeMirror(document.getElementById("code-editor"), {
-                value: "def square(n):",
+                value: `def square(n):
+    # return the answer`,
                 mode: "python",
                 theme: "eclipse", // Choose the theme
                 lineNumbers: true,

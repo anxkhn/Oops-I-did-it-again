@@ -18,14 +18,14 @@ def check_code():
     code = request.form['code']
     print(code)
     base = "n = 5\n"
-    final = "\nsquare(n)"
+    final = "\nprint(square(n))"
     try:
         result = subprocess.check_output(['python', '-c', base + code + final], stderr=subprocess.STDOUT, text=True)
         code = """def square(n):
     total = 0
     for i in range(1, n + 1):
         total += i ** 2
-    print(total)
+    return total
 """
         result2 = subprocess.check_output(['python', '-c', base + code + final], stderr=subprocess.STDOUT, text=True)
 
