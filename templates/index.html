@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts - Gabarito and Roboto Mono -->
+        <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Roboto+Mono&display=swap" rel="stylesheet">
+        <!-- MDB CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+        <!-- MDB JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+        <!-- CodeMirror styles and scripts -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/python/python.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/theme/eclipse.css">
+        <title style="font-family: 'Gabarito', sans-serif;">OOPs, I did it again!</title>
+        <style>
+            .left-section-card {
+                height: 100%;
+            }
+
+            .test-cases-box {
+                background-color: #f2f2f2;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            .code-mirror {
+                font-family: 'Roboto Mono', monospace;
+            }
+        </style>
+    </head>
+    <body style="font-family: 'Gabarito', sans-serif;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">OOPs, I did it again!</a>
+            </div>
+        </nav>
+        <div class="container my-5">
+            <div class="row">
+                <!-- Left Section: Problem Description and Test Cases -->
+                <div class="col-md-6">
+                    <div class="card left-section-card">
+                        <div class="card-body">
+                            <h1 style="font-family: 'Gabarito', sans-serif;">Sum of Squares</h1>
+                            <h5 style="font-family: 'Gabarito', sans-serif;"> You are given a single integer <code>n</code> (1 ≤ n ≤ 1000) representing the range. Your task is to calculate the sum of squares of all positive integers from 1 to <code>n</code> inclusive. </h5>
+                            <h5 style="font-family: 'Gabarito', sans-serif;"> Write a program to find this sum using the following formula:</h5>
+                            <h5 style="font-family: 'Gabarito', sans-serif;">
+                                <code>Sum = 1^2 + 2^2 + 3^2 + ... + n^2</code>
+                            </h5>
+                            <br>
+                            <!-- Input -->
+                            <div class="test-cases-box">
+                                <h5 style="font-family: 'Gabarito', sans-serif;">Input:</h5>
+                                <ul style="font-family: 'Roboto Mono', monospace;">
+                                    <li>Test Case 1: <code>n = 5</code>
+                                    </li>
+                                    <li>Test Case 2: <code>n = 8</code>
+                                    </li>
+                                    <!-- Add more test cases as needed -->
+                                </ul>
+                            </div>
+                            <br>
+                            <!-- Output -->
+                            <div class="test-cases-box">
+                                <h5 sstyle="font-family: 'Gabarito', sans-serif;">Output:</h5>
+                                <ul style="font-family: 'Roboto Mono', monospace;">
+                                    <li>Test Case 1: <code>Sum = 55</code>
+                                    </li>
+                                    <li>Test Case 2: <code>Sum = 204</code>
+                                    </li>
+                                    <!-- Add more test cases as needed -->
+                                </ul>
+                            </div>
+                            <br>
+                            <!-- Constraints -->
+                                <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
+                                <ul style="font-family: 'Roboto Mono', monospace;">
+                                    <li>
+                                        <code>1 ≤ n ≤ 1000</code>
+                                    </li>
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Section: Code Editor and Output -->
+                <div class="col-md-6">
+                    <div class="card rounded">
+                        <div class="card-body">
+                            <h3 style="font-family: 'Gabarito', sans-serif;">Code Editor</h3>
+                            <!-- Buttons for the code editor -->
+                            <form method="post" action="/check">
+                                <div id="code-editor" class="code-mirror"></div>
+                                <br>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-success">Run Code</button>
+                                    <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
+                                </div>
+                            </form>
+                            <h2 class="mt-4" style="font-family: 'Gabarito', sans-serif;">Output:</h2>
+                            <pre id="output" class="test-cases-box p-2 terminal-text code-mirror" style="white-space: pre-wrap;"><br></pre>
+                            <!-- Display testcase result (initially hidden) -->
+                            <div class="alert alert-success" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;"> Testcase Passed </div>
+                            <div class="alert alert-danger" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;"> Testcase Failed </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Optional: Include any additional JavaScript for code execution and output handling. -->
+        <script>
+            // Initialize CodeMirror with options
+            var editor = CodeMirror(document.getElementById("code-editor"), {
+                value: "def square(n):",
+                mode: "python",
+                theme: "eclipse", // Choose the theme
+                lineNumbers: true,
+                indentUnit: 4,
+            });
+            document.querySelector('form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const code = editor.getValue();
+                const response = await fetch('/check', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'code': code
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+                const data = await response.json();
+                // Get the output element and testcase result element
+                const outputElement = document.getElementById('output');
+                const successAlert = document.querySelector('.alert-success');
+                const failureAlert = document.querySelector('.alert-danger');
+                // Clear previous content
+                outputElement.textContent = '';
+                // Hide both alerts initially
+                successAlert.style.display = 'none';
+                failureAlert.style.display = 'none';
+                // Function to append text character by character with a delay
+                async function appendTextCharByChar(text, element, delay) {
+                    for (const char of text) {
+                        element.textContent += char;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                // Call the function to display the output character by character with a delay
+                await appendTextCharByChar(data.result, outputElement, 5);
+                // Display the appropriate alert based on the testcase result
+            });
+            const checkCodeButton = document.getElementById('check-code-button');
+            checkCodeButton.addEventListener('click', async () => {
+                const code = editor.getValue();
+                const response = await fetch('/check', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'code': code
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+                const data = await response.json();
+                // Get the output element and testcase result element
+                const outputElement = document.getElementById('output');
+                const successAlert = document.querySelector('.alert-success');
+                const failureAlert = document.querySelector('.alert-danger');
+                // Clear previous content
+                outputElement.textContent = '';
+                // Hide both alerts initially
+                successAlert.style.display = 'none';
+                failureAlert.style.display = 'none';
+                // Function to append text character by character with a delay
+                async function appendTextCharByChar(text, element, delay) {
+                    for (const char of text) {
+                        element.textContent += char;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                // Call the function to display the output character by character with a delay
+                await appendTextCharByChar(data.result, outputElement, 5);
+                // Display the appropriate alert based on the testcase result
+                if (data.testcase_passed) {
+                    // Show the success alert
+                    successAlert.style.display = 'block';
+                } else {
+                    // Show the failure alert
+                    failureAlert.style.display = 'block';
+                }
+            });
+        </script>
+    </body>
+</html>
