@@ -53,7 +53,33 @@ print(square(n))'
 );
 
 """)
+    db.execute("""INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code, testing_code, function_call_code)
+VALUES (
+    'Sum of Integers',
+    'You are given a single integer n (1 ≤ n ≤ 1000) representing the range. Your task is to calculate the sum of all positive integers from 1 to n inclusive. 
+    
+    Write a program to find this sum using the following formula: 
+    
+    Sum = 1 + 2 + 3 + ... + n',
+    'Test Case 1: 
+    Input: n = 5
+    Output: 15
+    Explanation: The sum of integers from 1 to 5 is 1 + 2 + 3 + 4 + 5, which results in a sum of 15.
+
+    Test Case 2: 
+    Input: n = 8
+    Output: 36',
+    'Constraints: 1 ≤ n ≤ 1000',
+    'def calculate_sum(n):\n    # return the answer',
+    'def calculate_sum(n):\n    total = 0\n    for i in range(1, n + 1):\n        total += i\n    return total',
+    'n = 5\n
+print(calculate_sum(n))\n
+n = 8\n
+print(calculate_sum(n))'
+);
+""")
     return redirect('/1') 
+
 
 @app.route('/<problem_id>')
 def problem_view(problem_id):
@@ -94,10 +120,9 @@ def check_code(problem_id):
         }
         return jsonify(response)
     except subprocess.CalledProcessError as e:
-        print(e.output)
         response = {
             "testcase_passed": False,
-            "result": "Error in code, please check again."
+            "result": f"There is an error in your code, please check again.\nError: {e.output}"
         }
         return jsonify(response)
 
