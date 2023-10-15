@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify,redirect
 from cs50 import SQL
 import subprocess
+import time
+
 
 
 app = Flask(__name__)
@@ -175,8 +177,13 @@ def check_code(problem_id):
 
     # print(code +"\n"+ final)
     try:
+        start_time = time.time()
         result = subprocess.check_output(['python', '-c', code +"\n"+ final], stderr=subprocess.STDOUT, text=True)
+        end_time = time.time()
         result2 = subprocess.check_output(['python', '-c', code2 +"\n"+ final], stderr=subprocess.STDOUT, text=True)
+        runtime = end_time-start_time
+        runtime = (end_time - start_time) * 1000  # Convert seconds to milliseconds and multiply by 1000
+        runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
 
         # Compare the results of the two executions
         testcase_passed = result.strip() == result2.strip()
@@ -185,7 +192,8 @@ def check_code(problem_id):
         response = {
             "testcase_passed": testcase_passed,
             "result": result,
-            "status": True
+            "status": True,
+            "time" : runtime_formatted
         }
         return jsonify(response)
     except subprocess.CalledProcessError as e:

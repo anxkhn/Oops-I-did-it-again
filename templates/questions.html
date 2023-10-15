@@ -53,10 +53,10 @@
                             <br>
                             <!-- Input -->
                             <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
-                            <div class="test-cases-box">
-                                <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line;">{{problem_info.test_cases}}</ul>
+                            <div class="test-cases-box" style="padding: 10px 20px;">
+                                <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line; margin: 0; padding: 0;">{{problem_info.test_cases}}</ul>
                             </div>
-                            <br>
+                                                        <br>
                             <!-- Constraints -->
                             <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
                             <ul style="font-family: 'Roboto Mono', monospace;">
@@ -163,6 +163,7 @@
                 } else if (data.status) {
                     // Show the success alert
                     codeSuccess.style.display = 'inline-block';
+                    codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
                     codeFailure.style.display = 'none'; // Hide the failure alert
                 } else {
                     // Show the failure alert
@@ -213,6 +214,7 @@
                 } else if (data.status) {
                     // Show the success alert
                     codeSuccess.style.display = 'inline-block';
+                    codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
                     codeFailure.style.display = 'none'; // Hide the failure alert
                 } else {
                     // Show the failure alert
