@@ -44,7 +44,7 @@ VALUES (
     Test Case 2: 
     Input : n = 8
     Output: 204',
-    'Constraints: 1 ≤ n ≤ 1000',
+    '1 ≤ n ≤ 1000',
     'def square(n):\n    # return the answer',
     'def square(n):\n    total = 0\n    for i in range(1, n + 1):\n        total += i ** 2\n    return total',
     'n = 5\n
@@ -70,7 +70,7 @@ VALUES (
     Test Case 2: 
     Input: n = 8
     Output: 36',
-    'Constraints: 1 ≤ n ≤ 1000',
+    '1 ≤ n ≤ 1000',
     'def calculate_sum(n):\n    # return the answer',
     'def calculate_sum(n):\n    total = 0\n    for i in range(1, n + 1):\n        total += i\n    return total',
     'n = 5\n
@@ -79,7 +79,73 @@ n = 8\n
 print(calculate_sum(n))'
 );
 """)
-    return redirect('/1') 
+    db.execute("""
+    INSERT INTO problems (problem_name, problem_description, test_cases,constraints,boiler_code, testing_code, function_call_code)
+    VALUES (
+        'Factorial Calculation',
+        'You are given a single integer n (0 ≤ n ≤ 12) representing a non-negative integer. Your task is to calculate the factorial of n. The factorial of a non-negative integer n is the product of all positive integers less than or equal to n.',
+        'Test Case 1: 
+        Input: n = 5
+        Output: 120
+        Explanation: 5! = 5 * 4 * 3 * 2 * 1 = 120.
+        
+        Test Case 2: 
+        Input: n = 0
+        Output: 1
+        Explanation: 0! is defined as 1.',
+        '0 ≤ n ≤ 12',
+        'def calculate_factorial(n):\n    # return the answer',
+        'def calculate_factorial(n):\n    if n == 0:\n        return 1\n    result = 1\n    for i in range(1, n + 1):\n        result *= i\n    return result',
+        'n = 5\n
+print(calculate_factorial(n))\n
+n = 0\n
+print(calculate_factorial(n))');
+""")
+    db.execute("""
+    INSERT INTO problems (problem_name, problem_description, test_cases,constraints,boiler_code, testing_code, function_call_code)
+    VALUES (
+        'Palindrome Check',
+        'You are given a string s. Your task is to determine whether s is a palindrome. A palindrome is a word, phrase, number, or other sequence of characters that reads the same forward and backward. Ignore spaces, punctuation, and capitalization.',
+        'Test Case 1: 
+        Input: s = "racecar"
+        Output: True
+        Explanation: "racecar" is a palindrome.
+        
+        Test Case 2: 
+        Input: s = "hello"
+        Output: False
+        Explanation: "hello" is not a palindrome.',
+        '1 ≤ len(s) ≤ 1000',
+        'def is_palindrome(s):\n    # return the answer',
+        'def is_palindrome(s):\n    s = s.lower().replace(" ", "").strip()\n    return s == s[::-1]',
+        's = "racecar"\n
+print(is_palindrome(s))\n
+s = "hello"\n
+print(is_palindrome(s))');
+""")
+    db.execute("""
+    INSERT INTO problems (problem_name, problem_description, test_cases,constraints,boiler_code, testing_code, function_call_code)
+    VALUES (
+        'Fibonacci Series',
+        'You are given a single integer n (0 ≤ n ≤ 30). Your task is to generate the first n numbers in the Fibonacci sequence.',
+        'Test Case 1: 
+        Input: n = 5
+        Output: [0, 1, 1, 2, 3]
+        Explanation: The first 5 numbers in the Fibonacci sequence are [0, 1, 1, 2, 3].
+        
+        Test Case 2: 
+        Input: n = 8
+        Output: [0, 1, 1, 2, 3, 5, 8, 13]',
+        '0 ≤ n ≤ 30',
+        'def generate_fibonacci(n):\n    # return the answer',
+        'def generate_fibonacci(n):\n    fibonacci = [0, 1]\n    while len(fibonacci) < n:\n        next_number = fibonacci[-1] + fibonacci[-2]\n        fibonacci.append(next_number)\n    return fibonacci',
+        'n = 5\n
+print(generate_fibonacci(n))\n
+n = 8\n
+print(generate_fibonacci(n))');
+""")
+
+    return redirect('/') 
 
 
 @app.route('/problems/<problem_id>')
@@ -113,6 +179,7 @@ def check_code(problem_id):
     final = problem_info["function_call_code"]
     code2 = problem_info["testing_code"]
 
+    # print(code +"\n"+ final)
     try:
         result = subprocess.check_output(['python', '-c', code +"\n"+ final], stderr=subprocess.STDOUT, text=True)
         result2 = subprocess.check_output(['python', '-c', code2 +"\n"+ final], stderr=subprocess.STDOUT, text=True)
