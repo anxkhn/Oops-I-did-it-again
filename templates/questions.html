@@ -38,8 +38,17 @@
     <body style="font-family: 'Gabarito', sans-serif;">
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">OOPs, I did it again!</a>
+            <div class="container d-flex justify-content-between">
+                <a class="navbar-brand" href="/">OOPs, I did it again!</a>
+                <div class="d-flex align-items-center">
+                    <p class="navbar-text m-0 me-3">Developed by Anas Khan</p>
+                    <a href="https://github.com/anxkhn" target="_blank" class="me-3">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://twitter.com/anxkhn" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
             </div>
         </nav>
         <div class="container my-5">
@@ -56,7 +65,7 @@
                             <div class="test-cases-box" style="padding: 10px 20px;">
                                 <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line; margin: 0; padding: 0;">{{problem_info.test_cases}}</ul>
                             </div>
-                                                        <br>
+                            <br>
                             <!-- Constraints -->
                             <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
                             <ul style="font-family: 'Roboto Mono', monospace;">
@@ -106,8 +115,8 @@
                             <div class="alert alert-danger" role="alert" style="font-family: 'Roboto Mono', monospace; display: none; margin-left: 10px; font-size: 12px; line-height: 0px ; vertical-align: middle;" id="codeFailure"> Run Time Error </div>
                             <pre id="output" class="test-cases-box p-2 terminal-text code-mirror" style="white-space: pre-wrap;"><br></pre>
                             <!-- Display testcase result (initially hidden) -->
-                            <div class="alert alert-success" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="successAlert"> Testcase Passed </div>
-                            <div class="alert alert-danger" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="failureAlert"> Testcase Failed </div>
+                            <div class="alert alert-success" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="successAlert"> Testcases Passed </div>
+                            <div class="alert alert-danger" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="failureAlert"> Testcases Failed </div>
                         </div>
                     </div>
                 </div>
