@@ -47,37 +47,13 @@
                 <div class="col-md-6">
                     <div class="card left-section-card">
                         <div class="card-body">
-                            <h1 style="font-family: 'Gabarito', sans-serif;">Sum of Squares</h1>
-                            <h5 style="font-family: 'Gabarito', sans-serif;"> You are given a single integer <code>n</code> (1 ≤ n ≤ 1000) representing the range. Your task is to calculate the sum of squares of all positive integers from 1 to <code>n</code> inclusive. </h5>
-                            <h5 style="font-family: 'Gabarito', sans-serif;"> Write a program to find this sum using the following formula:</h5>
-                            <h5 style="font-family: 'Gabarito', sans-serif;">
-                                <code>Sum = 1<sup>2</sup> + 2<sup>2</sup> + 3<sup>2</sup> + ... + n<sup>2</sup></code>
-                            </h5>
+                            <h1 style="font-family: 'Gabarito', sans-serif;">{{ problem_info.problem_name }}</h1>
+                            <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;"> {{problem_info.problem_description|safe}} </h5>
                             <br>
                             <!-- Input -->
+                            <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
                             <div class="test-cases-box">
-                                <h5 style="font-family: 'Gabarito', sans-serif;">Input:</h5>
-                                <ul style="font-family: 'Roboto Mono', monospace;">
-                                    <li>Test Case 1: <code>n = 5</code>
-                                    </li>
-                                    <li>Test Case 2: <code>n = 8</code>
-                                    </li>
-                                    <!-- Add more test cases as needed -->
-                                </ul>
-                            </div>
-                            <br>
-                            <!-- Output -->
-                            <div class="test-cases-box">
-                                <h5 sstyle="font-family: 'Gabarito', sans-serif;">Output:</h5>
-                                <ul style="font-family: 'Roboto Mono', monospace;">
-                                    <li>Test Case 1: <code>Sum = 55</code></li>
-                                Test Case 1 calculates the sum of squares of the first 5 positive integers (1^2 + 2^2 + 3^2 + 4^2 + 5^2) which results in a sum of 55.
-                                
-                                    
-                                    <li>Test Case 2: <code>Sum = 204</code>
-                                    </li>
-                                    <!-- Add more test cases as needed -->
-                                </ul>
+                                <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line;">{{problem_info.test_cases}}</ul>
                             </div>
                             <br>
                             <!-- Constraints -->
@@ -116,10 +92,10 @@
         </div>
         <!-- Optional: Include any additional JavaScript for code execution and output handling. -->
         <script>
+            const problem_id = {{ problem_info.problem_id | tojson }}
             // Initialize CodeMirror with options
             var editor = CodeMirror(document.getElementById("code-editor"), {
-                value: `def square(n):
-    # return the answer`,
+                value: {{ problem_info.boiler_code | tojson }},
                 mode: "python",
                 theme: "eclipse", // Choose the theme
                 lineNumbers: true,
@@ -128,7 +104,7 @@
             document.querySelector('form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const code = editor.getValue();
-                const response = await fetch('/check', {
+                const response = await fetch(`/check/${problem_id}`, {
                     method: 'POST',
                     body: new URLSearchParams({
                         'code': code
@@ -161,7 +137,7 @@
             const checkCodeButton = document.getElementById('check-code-button');
             checkCodeButton.addEventListener('click', async () => {
                 const code = editor.getValue();
-                const response = await fetch('/check', {
+                const response = await fetch(`/check/${problem_id}`, {
                     method: 'POST',
                     body: new URLSearchParams({
                         'code': code
