@@ -3,8 +3,6 @@ from cs50 import SQL
 import subprocess
 import time
 
-
-
 app = Flask(__name__)
 db = SQL("sqlite:///problems.db")
 
@@ -21,11 +19,32 @@ db.execute("""
     )
 """)
 
+db.execute("""
+CREATE TABLE IF NOT EXISTS request_logs (
+    id INTEGER PRIMARY KEY,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ip_address TEXT,
+    user_agent TEXT,
+    http_method TEXT,
+    url TEXT
+)
+""")
 
+@app.before_request
+def log_request_info():
+    # Log request details to the database
+    ip_address = request.remote_addr
+    user_agent = request.headers.get('User-Agent')
+    http_method = request.method
+    url = request.url
+    db.execute("INSERT INTO request_logs (ip_address, user_agent, http_method, url) VALUES (? ,? ,? , ?)",
+    ip_address, user_agent, http_method, url)
+    
 @app.route('/')
 def index():
+    unique_visits = db.execute("SELECT COUNT(DISTINCT ip_address) FROM request_logs")[0]['COUNT(DISTINCT ip_address)'] + 50
     problems = db.execute("SELECT * from problems")
-    return render_template('index.html',problems=problems)
+    return render_template('index.html',problems=problems,unique_visits=unique_visits)
 
 @app.route('/create_sample')
 def create_sample():
@@ -152,8 +171,9 @@ print(generate_fibonacci(n))');
 
 @app.route('/problems/<problem_id>')
 def problem_view(problem_id):
+    unique_visits = db.execute("SELECT COUNT(DISTINCT ip_address) FROM request_logs")[0]['COUNT(DISTINCT ip_address)'] + 50
     problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
-    return render_template('questions.html',problem_info=problem_info)
+    return render_template('questions.html',problem_info=problem_info,unique_visits=unique_visits)
 
 @app.route('/test')
 def test():
