@@ -4,7 +4,12 @@ import subprocess
 import time
 
 app = Flask(__name__)
-db = SQL("sqlite:///problems.db")
+
+try:
+    db = SQL("sqlite:///problems.db")
+except:
+    db = SQL("sqlite:////home/oopsididit/mysite/problems.db")
+
 
 db.execute("""
     CREATE TABLE IF NOT EXISTS problems (
