@@ -22,7 +22,8 @@ db.execute("""
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    problems = db.execute("SELECT * from problems")
+    return render_template('index.html',problems=problems)
 
 @app.route('/create_sample')
 def create_sample():
@@ -81,10 +82,10 @@ print(calculate_sum(n))'
     return redirect('/1') 
 
 
-@app.route('/<problem_id>')
+@app.route('/problems/<problem_id>')
 def problem_view(problem_id):
     problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
-    return render_template('index.html',problem_info=problem_info)
+    return render_template('questions.html',problem_info=problem_info)
 
 @app.route('/test')
 def test():
@@ -99,7 +100,7 @@ def check_code(problem_id):
     if code == boiler_code:
         response = {
             "testcase_passed": False,
-            "result": "Please enter code."
+            "result": "Please enter code.",
         }
         return jsonify(response)        
 
@@ -116,13 +117,15 @@ def check_code(problem_id):
         # Return the result and testcase_passed as JSON
         response = {
             "testcase_passed": testcase_passed,
-            "result": result
+            "result": result,
+            "status": True
         }
         return jsonify(response)
     except subprocess.CalledProcessError as e:
         response = {
             "testcase_passed": False,
-            "result": f"There is an error in your code, please check again.\nError: {e.output}"
+            "result": f"There is an error in your code, please check again.\nError: {e.output}",
+            "status": False
         }
         return jsonify(response)
 

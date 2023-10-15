@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts - Gabarito and Roboto Mono -->
+        <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Roboto+Mono&display=swap" rel="stylesheet">
+        <!-- MDB CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+        <!-- MDB JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+        <!-- CodeMirror styles and scripts -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/python/python.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/theme/eclipse.css">
+        <title style="font-family: 'Gabarito', sans-serif;">OOPs, I did it again!</title>
+        <style>
+            .left-section-card {
+                height: 100%;
+            }
+
+            .test-cases-box {
+                background-color: #f2f2f2;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            .code-mirror {
+                font-family: 'Roboto Mono', monospace;
+            }
+        </style>
+    </head>
+    <body style="font-family: 'Gabarito', sans-serif;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">OOPs, I did it again!</a>
+            </div>
+        </nav>
+        <div class="container my-5">
+            <div class="row">
+                <!-- Left Section: Problem Description and Test Cases -->
+                <div class="col-md-6">
+                    <div class="card left-section-card">
+                        <div class="card-body">
+                            <h1 style="font-family: 'Gabarito', sans-serif;">{{ problem_info.problem_name }}</h1>
+                            <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;"> {{problem_info.problem_description|safe}} </h5>
+                            <br>
+                            <!-- Input -->
+                            <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
+                            <div class="test-cases-box">
+                                <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line;">{{problem_info.test_cases}}</ul>
+                            </div>
+                            <br>
+                            <!-- Constraints -->
+                                <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
+                                <ul style="font-family: 'Roboto Mono', monospace;">
+                                    <li>
+                                        <code>1 ≤ n ≤ 1000</code>
+                                    </li>
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Section: Code Editor and Output -->
+                <div class="col-md-6">
+                    <div class="card rounded">
+                        <div class="card-body">
+                            <h3 style="font-family: 'Gabarito', sans-serif;">Code Editor</h3>
+                            <!-- Buttons for the code editor -->
+                            <form method="post" action="/check">
+                                <div id="code-editor" class="code-mirror"></div>
+                                <br>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-success">Run Code</button>
+                                    <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
+                                </div>
+                            </form>
+                            <h2 class="mt-4" style="font-family: 'Gabarito', sans-serif; display: inline-block; line-height: 40px;">Output:</h2>
+                            <div class="alert alert-success" role="alert" style="font-family: 'Roboto Mono', monospace; display: none; margin-left: 10px; font-size: 12px; line-height: 0px ; vertical-align: middle;" id="codeSuccess">
+                                Code Executed Sucessfully!
+                            </div>
+                            <div class="alert alert-danger" role="alert" style="font-family: 'Roboto Mono', monospace; display: none; margin-left: 10px; font-size: 12px; line-height: 0px ; vertical-align: middle;" id="codeFailure">
+                                Run Time Error
+                            </div>
+                            <pre id="output" class="test-cases-box p-2 terminal-text code-mirror" style="white-space: pre-wrap;"><br></pre>
+                            <!-- Display testcase result (initially hidden) -->
+                            <div class="alert alert-success" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="successAlert"> Testcase Passed </div>
+                            <div class="alert alert-danger" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="failureAlert"> Testcase Failed </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Optional: Include any additional JavaScript for code execution and output handling. -->
+        <script>
+            const problem_id = {{ problem_info.problem_id | tojson }}
+            // Initialize CodeMirror with options
+            var editor = CodeMirror(document.getElementById("code-editor"), {
+                value: {{ problem_info.boiler_code | tojson }},
+                mode: "python",
+                theme: "eclipse", // Choose the theme
+                lineNumbers: true,
+                indentUnit: 4,
+            });
+            document.querySelector('form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const code = editor.getValue();
+                const response = await fetch(`/check/${problem_id}`, {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'code': code
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+                const data = await response.json();
+                // Get the output element and testcase result element
+                const outputElement = document.getElementById('output');
+                const successAlert = document.getElementById('successAlert');
+                const failureAlert = document.getElementById('failureAlert');
+                const codeSuccess = document.getElementById('codeSuccess');
+                const codeFailure = document.getElementById('codeFailure');
+
+                // Clear previous content
+                outputElement.textContent = '';
+                // Hide both alerts initially
+                successAlert.style.display = 'none';
+                failureAlert.style.display = 'none';
+                // Function to append text character by character with a delay
+                async function appendTextCharByChar(text, element, delay) {
+                    for (const char of text) {
+                        element.textContent += char;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                // Call the function to display the output character by character with a delay
+                if (typeof data.status === 'undefined') {
+                    // Handle the case where data.status is undefined or not found
+                    codeSuccess.style.display = 'none';
+                    codeFailure.style.display = 'none';
+                } else if (data.status) {
+                    // Show the success alert
+                    codeSuccess.style.display = 'inline-block';
+                    codeFailure.style.display = 'none'; // Hide the failure alert
+                } else {
+                    // Show the failure alert
+                    codeFailure.style.display = 'inline-block';
+                    codeSuccess.style.display = 'none'; // Hide the success alert
+                }
+                                                await appendTextCharByChar(data.result, outputElement, 5);
+                // Display the appropriate alert based on the testcase result
+            });
+            const checkCodeButton = document.getElementById('check-code-button');
+            checkCodeButton.addEventListener('click', async () => {
+                const code = editor.getValue();
+                const response = await fetch(`/check/${problem_id}`, {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'code': code
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+                const data = await response.json();
+                // Get the output element and testcase result element
+                const outputElement = document.getElementById('output');
+                const successAlert = document.getElementById('successAlert');
+                const failureAlert = document.getElementById('failureAlert');
+                const codeSuccess = document.getElementById('codeSuccess');
+                const codeFailure = document.getElementById('codeFailure');
+
+                // Clear previous content
+                outputElement.textContent = '';
+                // Hide both alerts initially
+                successAlert.style.display = 'none';
+                failureAlert.style.display = 'none';
+                // Function to append text character by character with a delay
+                async function appendTextCharByChar(text, element, delay) {
+                    for (const char of text) {
+                        element.textContent += char;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                // Call the function to display the output character by character with a delay
+                console.log(data.status)
+                if (typeof data.status === 'undefined') {
+                    // Handle the case where data.status is undefined or not found
+                    codeSuccess.style.display = 'none';
+                    codeFailure.style.display = 'none';
+                } else if (data.status) {
+                    // Show the success alert
+                    codeSuccess.style.display = 'inline-block';
+                    codeFailure.style.display = 'none'; // Hide the failure alert
+                } else {
+                    // Show the failure alert
+                    codeFailure.style.display = 'inline-block';
+                    codeSuccess.style.display = 'none'; // Hide the success alert
+                }
+                                                await appendTextCharByChar(data.result, outputElement, 5);
+                // Display the appropriate alert based on the testcase result
+                if (data.testcase_passed) {
+                    // Show the success alert
+                    successAlert.style.display = 'block';
+                } else {
+                    // Show the failure alert
+                    failureAlert.style.display = 'block';
+                }
+            });
+        </script>
+    </body>
+</html>
