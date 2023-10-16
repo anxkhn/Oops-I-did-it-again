@@ -89,6 +89,13 @@
                             <form method="post" action="/check">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h3 style="font-family: 'Gabarito', sans-serif; display: inline-block;">Code Editor</h3>
+                                    <div class="form-group">
+                                        <label for="languageSelect">Select a language:</label>
+                                        <select class="form-control" id="languageSelect">
+                                            <option value="python" selected>Python</option>
+                                            <option value="cpp">C++</option>
+                                        </select>
+                                    </div>
                                     <button type="button" id="reset-code-button" class="btn btn-danger btn-floating btn-lg" data-mdb-toggle="modal" data-mdb-target="#resetCodeModal" style="box-shadow: none;">
                                         <i class="fa-solid fa-rotate fa-lg pe-none"></i>
                                     </button>
@@ -111,7 +118,7 @@
                                 <div id="code-editor" class="code-mirror"></div>
                                 <br>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <button type="submit" class="btn btn-success">Run Code</button>
+                                    <button type="submit" id="run-code-button" class="btn btn-success">Run Code</button>
                                     <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
                                 </div>
                             </form>
@@ -128,6 +135,10 @@
             </div>
         </div>
         <script>
+            const languageSelect = document.getElementById('languageSelect');
+            let language = languageSelect.options[languageSelect.selectedIndex].value;
+            const checkCodeButton = document.getElementById('check-code-button');
+            const runCodeButton = document.getElementById('run-code-button');
             const problem_id = {{ problem_info.problem_id | tojson }}
             // Initialize CodeMirror with options
             var editor = CodeMirror(document.getElementById("code-editor"), {
@@ -137,13 +148,21 @@
                 lineNumbers: true,
                 indentUnit: 4,
             });
-            document.querySelector('form').addEventListener('submit', async (e) => {
+            languageSelect.addEventListener('change', function() {
+                const selectedOption = languageSelect.options[languageSelect.selectedIndex];
+                language = selectedOption.value; // Update the 'language' variable
+            });
+                document.querySelector('form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const code = editor.getValue();
-                const response = await fetch(`/check/${problem_id}`, {
+                checkCodeButton.disabled = true;
+                runCodeButton.disabled = true;
+                const response = await fetch(`/check`, {
                     method: 'POST',
                     body: new URLSearchParams({
-                        'code': code
+                        'code': code,
+                        'lang': language,
+                        'problem_id': problem_id
                     }),
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -184,16 +203,21 @@
                     codeFailure.style.display = 'inline-block';
                     codeSuccess.style.display = 'none'; // Hide the success alert
                 }
-                                                await appendTextCharByChar(data.result, outputElement, 5);
+                await appendTextCharByChar(data.result, outputElement, 5);
                 // Display the appropriate alert based on the testcase result
+                checkCodeButton.disabled = false;
+                runCodeButton.disabled = false;
             });
-            const checkCodeButton = document.getElementById('check-code-button');
             checkCodeButton.addEventListener('click', async () => {
                 const code = editor.getValue();
-                const response = await fetch(`/check/${problem_id}`, {
+                checkCodeButton.disabled = true;
+                runCodeButton.disabled = true;
+                const response = await fetch(`/check`, {
                     method: 'POST',
                     body: new URLSearchParams({
-                        'code': code
+                        'code': code,
+                        'lang': language,
+                        'problem_id': problem_id
                     }),
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -235,7 +259,7 @@
                     codeFailure.style.display = 'inline-block';
                     codeSuccess.style.display = 'none'; // Hide the success alert
                 }
-                                                await appendTextCharByChar(data.result, outputElement, 5);
+                await appendTextCharByChar(data.result, outputElement, 5);
                 // Display the appropriate alert based on the testcase result
                 if (data.testcase_passed) {
                     // Show the success alert
@@ -244,6 +268,8 @@
                     // Show the failure alert
                     failureAlert.style.display = 'block';
                 }
+                checkCodeButton.disabled = false;
+                runCodeButton.disabled = false;
             });
               // Function to reset the editor to default code
             function resetToDefaultCode() {

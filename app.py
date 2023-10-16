@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify,redirect
 from cs50 import SQL
+from compiler import compile_python,compile_cpp
 import subprocess
 import time
+import os
+
 
 app = Flask(__name__)
 
@@ -185,9 +188,11 @@ def test():
     return render_template('test.html')
 
 
-@app.route('/check/<problem_id>', methods=['POST'])
-def check_code(problem_id):
+@app.route('/check', methods=['POST'])
+def check_code():
     code = request.form['code']
+    problem_id = request.form['problem_id']
+    lang = request.form['lang']
     problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
     boiler_code = problem_info['boiler_code']
     if code == boiler_code:
@@ -202,14 +207,18 @@ def check_code(problem_id):
 
     # print(code +"\n"+ final)
     try:
-        start_time = time.time()
-        result = subprocess.check_output(['python', '-c', code +"\n"+ final], stderr=subprocess.STDOUT, text=True)
-        end_time = time.time()
-        result2 = subprocess.check_output(['python', '-c', code2 +"\n"+ final], stderr=subprocess.STDOUT, text=True)
-        runtime = end_time-start_time
-        runtime = (end_time - start_time) * 1000  # Convert seconds to milliseconds and multiply by 1000
+        if lang == "py":
+            result,runtime = compile_python(code+"\n"+final)
+        elif lang == "cpp":
+            result,runtime = compile_cpp(code)
+        print(result)
+        runtime = runtime * 1000  # Convert seconds to milliseconds and multiply by 1000
         runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
-
+        result2 = subprocess.check_output(['python', '-c', code2 +"\n"+ final], stderr=subprocess.STDOUT, text=True)
+        if runtime == 0:
+            status = False
+        else:
+            status = True
         # Compare the results of the two executions
         testcase_passed = result.strip() == result2.strip()
 
@@ -217,7 +226,7 @@ def check_code(problem_id):
         response = {
             "testcase_passed": testcase_passed,
             "result": result,
-            "status": True,
+            "status": status,
             "time" : runtime_formatted
         }
         return jsonify(response)
@@ -228,7 +237,6 @@ def check_code(problem_id):
             "status": False
         }
         return jsonify(response)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
