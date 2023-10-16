@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+/__pycache__/
+__pycache__/
+COMPILER_TEMP/
+/COMPILER_TEMP/
 
 # C extensions
 *.so
