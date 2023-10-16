@@ -187,7 +187,7 @@ print(square(n))'
 @app.route('/problems/<problem_id>')
 def problem_view(problem_id):
     problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
-    return render_template('questions.html',problem_info=problem_info)
+    return render_template('questions.html', problem_info=problem_info)
 
 @app.route('/test')
 def test():

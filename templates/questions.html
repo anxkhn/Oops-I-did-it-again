@@ -59,7 +59,8 @@
                     <div class="card left-section-card">
                         <div class="card-body">
                             <h1 style="font-family: 'Gabarito', sans-serif;">{{ problem_info.problem_name }}</h1>
-                            <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;"> {{problem_info.problem_description|safe}} </h5>
+                            <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;">
+                            {{ problem_info.problem_description|safe }} </h5>
                             <br>
                             <!-- Input -->
                             <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
@@ -95,6 +96,7 @@
                                     <button type="button" id="reset-code-button" class="btn btn-danger btn-floating btn-lg" data-mdb-toggle="modal" data-mdb-target="#resetCodeModal" style="box-shadow: none;">
                                         <i class="fa-solid fa-rotate fa-lg pe-none"></i>
                                     </button>
+                                    
                                     <div class="modal fade" id="resetCodeModal" tabindex="-1" role="dialog" aria-labelledby="resetCodeModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
@@ -281,10 +283,15 @@
             });
               // Function to reset the editor to default code
             function resetToDefaultCode() {
-                const defaultCode = {{ problem_info.boiler_code_python | tojson }};
-                editor.setValue(defaultCode);
+                if (language === 'python') {
+                    const defaultCode = {{ problem_info.boiler_code_python | tojson }};
+                    editor.setValue(defaultCode);
+                } else if (language === 'cpp') {
+                    const defaultCode = {{ problem_info.boiler_code_cpp | tojson }};
+                    editor.setValue(defaultCode);
+                }
             }
-
+            
             // Add an event listener to the "Reset to Default Code" button
             const resetCodeButton = document.getElementById('reset-code-button');
             resetCodeButton.addEventListener('click', () => {
