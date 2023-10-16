@@ -139,7 +139,7 @@ def create_sample():
         'def generate_fibonacci(n):\n    fibonacci = [0, 1]\n    while len(fibonacci) < n:\n        next_number = fibonacci[-1] + fibonacci[-2]\n        fibonacci.append(next_number)\n    return fibonacci',
         'int main() {\n    int n = 5;\n    vector<int> result = generate_fibonacci(n);\n    for (int num : result) {\n        cout << num << " ";\n    }\n    cout << endl;\n    n = 8;\n    result = generate_fibonacci(n);\n    for (int num : result) {\n        cout << num << " ";\n    }\n    cout << endl;\n}',
         'n = 5\nresult = generate_fibonacci(n)\nfor num in result:\n    print(num, end=" ")\nn = 8\nresult = generate_fibonacci(n)\nfor num in result:\n    print(num, end=" ")',
-        'public class Solution {\n    public static List<Integer> generateFibonacci(int n) {\n        // return the answer\n    }\n}',
+        'import java.util.List;\nimport java.util.ArrayList;\n    public class Solution {\n    public static List<Integer> generateFibonacci(int n) {\n        // return the answer\n    }\n',
         'public static void main(String[] args) {\n    int n = 5;\n    List<Integer> result = Solution.generateFibonacci(n);\n    for (int num : result) {\n        System.out.print(num + " ");\n    }\n    System.out.println();\n    n = 8;\n    result = Solution.generateFibonacci(n);\n    for (int num : result) {\n        System.out.print(num + " ");\n    }\n    System.out.println();\n}\n}'
     );
 """)
