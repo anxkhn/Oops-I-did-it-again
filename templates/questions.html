@@ -91,6 +91,7 @@
                                         <select class="form-control" id="languageSelect">
                                             <option value="python" selected>Python</option>
                                             <option value="cpp">C++</option>
+                                            <option value="java">Java</option>
                                         </select>
                                     </div>
                                     <button type="button" id="reset-code-button" class="btn btn-danger btn-floating btn-lg" data-mdb-toggle="modal" data-mdb-target="#resetCodeModal" style="box-shadow: none;">
@@ -149,11 +150,14 @@
                     editor.setOption('mode', 'python');
                     editor.setValue({{ problem_info.boiler_code_python | tojson }});
                 } else if (language === 'cpp') {
-                    editor.setOption('mode', 'text/x-c++src'); // Set mode to C++
+                    editor.setOption('mode', 'text/x-c++src');
                     editor.setValue({{ problem_info.boiler_code_cpp | tojson }});
+                } else if (language === 'java') {
+                    editor.setOption('mode', 'text/x-java');
+                    editor.setValue({{ problem_info.boiler_code_java | tojson }});
                 }
             }
-            
+                    
             // Call the setEditorMode function when the page loads and when the language selection changes
             setEditorMode();
             
@@ -172,6 +176,7 @@
                     body: new URLSearchParams({
                         'code': code,
                         'lang': language,
+                        'type': "run",
                         'problem_id': problem_id
                     }),
                     headers: {
@@ -227,6 +232,7 @@
                     body: new URLSearchParams({
                         'code': code,
                         'lang': language,
+                        'type': "check",
                         'problem_id': problem_id
                     }),
                     headers: {
@@ -289,7 +295,11 @@
                 } else if (language === 'cpp') {
                     const defaultCode = {{ problem_info.boiler_code_cpp | tojson }};
                     editor.setValue(defaultCode);
+                } else if (language === 'java') {
+                    const defaultCode = {{ problem_info.boiler_code_java | tojson }};
+                    editor.setValue(defaultCode);
                 }
+
             }
             
             // Add an event listener to the "Reset to Default Code" button
