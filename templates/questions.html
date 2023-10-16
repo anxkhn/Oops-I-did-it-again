@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/eclipse.min.css">
         <title style="font-family: 'Gabarito', sans-serif;">OOPs, I did it again!</title>
         <style>
@@ -40,11 +41,6 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container d-flex justify-content-between">
                 <a class="navbar-brand" href="/">OOPs, I did it again!</a>
-                <div class="d-flex align-items-center">
-                    <p class="navbar-text m-0 me-3">
-                        Beta v0.3 | Unique Visits: {{ unique_visits }}
-                    </p>
-                </div>
                 <div class="d-flex justify-content-center align-items-center">
                     <p class="navbar-text m-0 me-3">Developed by Anas Khan</p>
                     <a href="https://github.com/anxkhn" target="_blank" class="me-3">
@@ -142,15 +138,27 @@
             const problem_id = {{ problem_info.problem_id | tojson }}
             // Initialize CodeMirror with options
             var editor = CodeMirror(document.getElementById("code-editor"), {
-                value: {{ problem_info.boiler_code | tojson }},
-                mode: "python",
                 theme: "eclipse", // Choose the theme
                 lineNumbers: true,
                 indentUnit: 4,
             });
+            function setEditorMode() {
+                if (language === 'python') {
+                    editor.setOption('mode', 'python');
+                    editor.setValue({{ problem_info.boiler_code_python | tojson }});
+                } else if (language === 'cpp') {
+                    editor.setOption('mode', 'text/x-c++src'); // Set mode to C++
+                    editor.setValue({{ problem_info.boiler_code_cpp | tojson }});
+                }
+            }
+            
+            // Call the setEditorMode function when the page loads and when the language selection changes
+            setEditorMode();
+            
             languageSelect.addEventListener('change', function() {
                 const selectedOption = languageSelect.options[languageSelect.selectedIndex];
                 language = selectedOption.value; // Update the 'language' variable
+                setEditorMode(); // Set the appropriate CodeMirror mode and value
             });
                 document.querySelector('form').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -273,7 +281,7 @@
             });
               // Function to reset the editor to default code
             function resetToDefaultCode() {
-                const defaultCode = {{ problem_info.boiler_code | tojson }};
+                const defaultCode = {{ problem_info.boiler_code_python | tojson }};
                 editor.setValue(defaultCode);
             }
 
