@@ -63,7 +63,6 @@ def compile_python(code):
     return (result,runtime)
 
 def compile_java(code):
-    print(code)
     # Generate a random file name within the temporary folder
     random_file_name = ''.join(random.choice(string.ascii_letters) for _ in range(10))
     code = code.replace("Solution",random_file_name)

@@ -119,6 +119,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <button type="submit" id="run-code-button" class="btn btn-success">Run Code</button>
                                     <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
+                                    <button id="printLocalStorageButton" class="btn btn-primary">Print Local Storage Content</button>
+
                                 </div>
                             </form>
                             <h2 class="mt-4" style="font-family: 'Gabarito', sans-serif; display: inline-block; line-height: 40px;">Output:</h2>
@@ -146,17 +148,19 @@
                 indentUnit: 4,
             });
             function setEditorMode() {
+                const storedCode = localStorage.getItem(`${language}_code`);
                 if (language === 'python') {
                     editor.setOption('mode', 'python');
-                    editor.setValue({{ problem_info.boiler_code_python | tojson }});
+                    editor.setValue(storedCode || ''); // Set the code from local storage or an empty string if not found
                 } else if (language === 'cpp') {
                     editor.setOption('mode', 'text/x-c++src');
-                    editor.setValue({{ problem_info.boiler_code_cpp | tojson }});
+                    editor.setValue(storedCode || '');
                 } else if (language === 'java') {
                     editor.setOption('mode', 'text/x-java');
-                    editor.setValue({{ problem_info.boiler_code_java | tojson }});
+                    editor.setValue(storedCode || '');
                 }
             }
+            
                     
             // Call the setEditorMode function when the page loads and when the language selection changes
             setEditorMode();
@@ -316,6 +320,34 @@
                 // Close the modal
                 $('#resetCodeModal').modal('hide');
             });
+            // Function to store code in local storage
+            function storeCodeInLocalStorage() {
+                const code = editor.getValue();
+                localStorage.setItem(`${language}_code`, code);
+            }
+
+            // Automatically update code in local storage every 5 seconds
+            setInterval(storeCodeInLocalStorage, 1);
+            function printLocalStorageContent() {
+                console.log("Local Storage Content:");
+            
+                // List of languages
+                const languages = ['python', 'cpp', 'java'];
+            
+                languages.forEach(lang => {
+                    const storedCode = localStorage.getItem(`${lang}_code`);
+                    if (storedCode) {
+                        console.log(`Language: ${lang}`);
+                        console.log(storedCode);
+                    } else {
+                        console.log(`Language: ${lang} - Local storage is empty.`);
+                    }
+                });
+            }
+            const printLocalStorageButton = document.getElementById('printLocalStorageButton');
+            printLocalStorageButton.addEventListener('click', printLocalStorageContent);
+
+            // Function to retrieve code from local storage and update it
         </script>
     </body>
 </html>
