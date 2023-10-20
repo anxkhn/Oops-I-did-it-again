@@ -1,353 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <!-- Google Fonts - Gabarito and Roboto Mono -->
-        <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Roboto+Mono&display=swap" rel="stylesheet">
-        <!-- MDB CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
-        <!-- MDB JavaScript -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- CodeMirror styles and scripts -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/eclipse.min.css">
-        <title style="font-family: 'Gabarito', sans-serif;">OOPs, I did it again!</title>
-        <style>
-            .left-section-card {
-                height: 100%;
-            }
 
-            .test-cases-box {
-                background-color: #f2f2f2;
-                padding: 5px;
-                border-radius: 5px;
-            }
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts - Gabarito and Roboto Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- MDB CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+    <!-- MDB JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- CodeMirror styles and scripts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/eclipse.min.css">
+    <title style="font-family: 'Gabarito', sans-serif;">OOPs, I did it again!</title>
+    <style>
+        .left-section-card {
+            height: 100%;
+        }
 
-            .code-mirror {
-                font-family: 'Roboto Mono', monospace;
-            }
-        </style>
-    </head>
-    <body style="font-family: 'Gabarito', sans-serif;">
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container d-flex justify-content-between">
-                <a class="navbar-brand" href="/">OOPs, I did it again!</a>
-                <div class="d-flex justify-content-center align-items-center">
-                    <p class="navbar-text m-0 me-3">Developed by Anas Khan</p>
-                    <a href="https://github.com/anxkhn" target="_blank" class="me-3">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://twitter.com/anxkhn" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                </div>
+        .test-cases-box {
+            background-color: #f2f2f2;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .code-mirror {
+            font-family: 'Roboto Mono', monospace;
+        }
+    </style>
+</head>
+
+<body style="font-family: 'Gabarito', sans-serif;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand" href="/">OOPs, I did it again!</a>
+            <div class="d-flex justify-content-center align-items-center">
+                <p class="navbar-text m-0 me-3">Developed by Anas Khan</p>
+                <a href="https://github.com/anxkhn" target="_blank" class="me-3">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://twitter.com/anxkhn" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
             </div>
-        </nav>
-        <div class="container my-5">
-            <div class="row">
-                <!-- Left Section: Problem Description and Test Cases -->
-                <div class="col-md-6">
-                    <div class="card left-section-card">
-                        <div class="card-body">
-                            <h1 style="font-family: 'Gabarito', sans-serif;">{{ problem_info.problem_name }}</h1>
-                            <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;">
+        </div>
+    </nav>
+    <div class="container my-5">
+        <div class="row">
+            <!-- Left Section: Problem Description and Test Cases -->
+            <div class="col-md-6">
+                <div class="card left-section-card">
+                    <div class="card-body">
+                        <h1 style="font-family: 'Gabarito', sans-serif;">{{ problem_info.problem_name }}</h1>
+                        <h5 style="font-family: 'Gabarito', sans-serif; white-space: pre-line;">
                             {{ problem_info.problem_description|safe }} </h5>
-                            <br>
-                            <!-- Input -->
-                            <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
-                            <div class="test-cases-box" style="padding: 10px 20px;">
-                                <ul style="font-family: 'Roboto Mono', monospace; white-space: pre-line; margin: 0; padding: 0;">{{problem_info.test_cases}}</ul>
-                            </div>
-                            <br>
-                            <!-- Constraints -->
-                            <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
-                            <ul style="font-family: 'Roboto Mono', monospace;">
-                                <li>
-                                    <code>{{problem_info.constraints}}</code>
-                                </li>
-                            </ul>
+                        <br>
+                        <!-- Input -->
+                        <h5 style="font-family: 'Gabarito', sans-serif;">Testcases:</h5>
+                        <div class="test-cases-box" style="padding: 10px 20px;">
+                            <ul
+                                style="font-family: 'Roboto Mono', monospace; white-space: pre-line; margin: 0; padding: 0;">
+                                {{problem_info.test_cases}}</ul>
                         </div>
+                        <br>
+                        <!-- Constraints -->
+                        <h5 style="font-family: 'Gabarito', sans-serif;">Constraints:</h5>
+                        <ul style="font-family: 'Roboto Mono', monospace;">
+                            <li>
+                                <code>{{problem_info.constraints}}</code>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <!-- Right Section: Code Editor and Output -->
-                <div class="col-md-6">
-                    <div class="card rounded">
-                        <div class="card-body">
-                            <!-- Buttons for the code editor -->
-                            <form method="post" action="/check">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h3 style="font-family: 'Gabarito', sans-serif; display: inline-block;">Code Editor</h3>
-                                    <div class="form-group">
-                                        <label for="languageSelect">Select a language:</label>
-                                        <select class="form-control" id="languageSelect">
-                                            <option value="python" selected>Python</option>
-                                            <option value="cpp">C++</option>
-                                            <option value="java">Java</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" id="reset-code-button" class="btn btn-danger btn-floating btn-lg" data-mdb-toggle="modal" data-mdb-target="#resetCodeModal" style="box-shadow: none;">
-                                        <i class="fa-solid fa-rotate fa-lg pe-none"></i>
-                                    </button>
-                                    
-                                    <div class="modal fade" id="resetCodeModal" tabindex="-1" role="dialog" aria-labelledby="resetCodeModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="resetCodeModalLabel">Reset Code to Default</h5>
-                                                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body"> Are you sure you want to reset the code to the default code? </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">No</button>
-                                                    <button type="button" class="btn btn-primary" id="confirmReset">Yes</button>
-                                                </div>
+            </div>
+            <!-- Right Section: Code Editor and Output -->
+            <div class="col-md-6">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <!-- Buttons for the code editor -->
+                        <form method="post" action="/check">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 style="font-family: 'Gabarito', sans-serif; display: inline-block;">Code Editor</h3>
+                                <div class="form-group">
+                                    <label for="languageSelect">Select a language:</label>
+                                    <select class="form-control" id="languageSelect">
+                                        <option value="python" selected>Python</option>
+                                        <option value="cpp">C++</option>
+                                        <option value="java">Java</option>
+                                    </select>
+                                </div>
+                                <button type="button" id="reset-code-button" class="btn btn-danger btn-floating btn-lg"
+                                    data-mdb-toggle="modal" data-mdb-target="#resetCodeModal" style="box-shadow: none;">
+                                    <i class="fa-solid fa-rotate fa-lg pe-none"></i>
+                                </button>
+
+                                <div class="modal fade" id="resetCodeModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="resetCodeModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="resetCodeModalLabel">Reset Code to Default
+                                                </h5>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body"> Are you sure you want to reset the code to the
+                                                default code? </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-mdb-dismiss="modal">No</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    id="confirmReset">Yes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="code-editor" class="code-mirror"></div>
-                                <br>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button type="submit" id="run-code-button" class="btn btn-success">Run Code</button>
-                                    <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
-                                    <button id="printLocalStorageButton" class="btn btn-primary">Print Local Storage Content</button>
+                            </div>
+                            <div id="code-editor" class="code-mirror"></div>
+                            <br>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="submit" id="run-code-button" class="btn btn-success">Run Code</button>
+                                <button type="button" class="btn btn-primary" id="check-code-button">Check Code</button>
+                                <!-- <button id="printLocalStorageButton" class="btn btn-primary">Print Local Storage Content</button> -->
 
-                                </div>
-                            </form>
-                            <h2 class="mt-4" style="font-family: 'Gabarito', sans-serif; display: inline-block; line-height: 40px;">Output:</h2>
-                            <div class="alert alert-success" role="alert" style="display: none; margin-left: 10px; font-size: 15px; line-height: 0px ; vertical-align: middle;" id="codeSuccess"> Code Executed Sucessfully! </div>
-                            <div class="alert alert-danger" role="alert" style=" display: none; margin-left: 10px; font-size: 15px; line-height: 0px ; vertical-align: middle;" id="codeFailure"> Run Time Error </div>
-                            <pre id="output" class="test-cases-box p-2 terminal-text code-mirror" style="white-space: pre-wrap;"><br></pre>
-                            <!-- Display testcase result (initially hidden) -->
-                            <div class="alert alert-success" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="successAlert"> Testcases Passed </div>
-                            <div class="alert alert-danger" role="alert" style="display: none; font-family: 'Roboto Mono', monospace;" id="failureAlert"> Testcases Failed </div>
-                        </div>
+                            </div>
+                        </form>
+                        <h2 class="mt-4"
+                            style="font-family: 'Gabarito', sans-serif; display: inline-block; line-height: 40px;">
+                            Output:</h2>
+                        <div class="alert alert-success" role="alert"
+                            style="display: none; margin-left: 10px; font-size: 15px; line-height: 0px ; vertical-align: middle;"
+                            id="codeSuccess"> Code Executed Sucessfully! </div>
+                        <div class="alert alert-danger" role="alert"
+                            style=" display: none; margin-left: 10px; font-size: 15px; line-height: 0px ; vertical-align: middle;"
+                            id="codeFailure"> Run Time Error </div>
+                        <pre id="output" class="test-cases-box p-2 terminal-text code-mirror"
+                            style="white-space: pre-wrap;"><br></pre>
+                        <!-- Display testcase result (initially hidden) -->
+                        <div class="alert alert-success" role="alert"
+                            style="display: none; font-family: 'Roboto Mono', monospace;" id="successAlert"> Testcases
+                            Passed </div>
+                        <div class="alert alert-danger" role="alert"
+                            style="display: none; font-family: 'Roboto Mono', monospace;" id="failureAlert"> Testcases
+                            Failed </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script>
-            const languageSelect = document.getElementById('languageSelect');
-            let language = languageSelect.options[languageSelect.selectedIndex].value;
-            const checkCodeButton = document.getElementById('check-code-button');
-            const runCodeButton = document.getElementById('run-code-button');
-            const problem_id = {{ problem_info.problem_id | tojson }}
-            // Initialize CodeMirror with options
-            var editor = CodeMirror(document.getElementById("code-editor"), {
-                theme: "eclipse", // Choose the theme
-                lineNumbers: true,
-                indentUnit: 4,
+    </div>
+    <script>
+        const languageSelect = document.getElementById('languageSelect');
+        let language = languageSelect.options[languageSelect.selectedIndex].value;
+        const checkCodeButton = document.getElementById('check-code-button');
+        const runCodeButton = document.getElementById('run-code-button');
+        const problem_id = {{ problem_info.problem_id | tojson }}
+        // Initialize CodeMirror with options
+        var editor = CodeMirror(document.getElementById("code-editor"), {
+            theme: "eclipse", // Choose the theme
+            lineNumbers: true,
+            indentUnit: 4,
+        });
+        function setEditorMode() {
+            const storedCode = localStorage.getItem(`${language}_code`);
+            if (language === 'python') {
+                editor.setOption('mode', 'python');
+                editor.setValue(storedCode || ''); // Set the code from local storage or an empty string if not found
+            } else if (language === 'cpp') {
+                editor.setOption('mode', 'text/x-c++src');
+                editor.setValue(storedCode || '');
+            } else if (language === 'java') {
+                editor.setOption('mode', 'text/x-java');
+                editor.setValue(storedCode || '');
+            }
+        }
+
+
+        // Call the setEditorMode function when the page loads and when the language selection changes
+        setEditorMode();
+
+        languageSelect.addEventListener('change', function () {
+            const selectedOption = languageSelect.options[languageSelect.selectedIndex];
+            language = selectedOption.value; // Update the 'language' variable
+            setEditorMode(); // Set the appropriate CodeMirror mode and value
+        });
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = editor.getValue();
+            checkCodeButton.disabled = true;
+            runCodeButton.disabled = true;
+            const response = await fetch(`/check`, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'code': code,
+                    'lang': language,
+                    'type': "run",
+                    'problem_id': problem_id
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
             });
-            function setEditorMode() {
-                const storedCode = localStorage.getItem(`${language}_code`);
-                if (language === 'python') {
-                    editor.setOption('mode', 'python');
-                    editor.setValue(storedCode || ''); // Set the code from local storage or an empty string if not found
+            const data = await response.json();
+            // Get the output element and testcase result element
+            const outputElement = document.getElementById('output');
+            const successAlert = document.getElementById('successAlert');
+            const failureAlert = document.getElementById('failureAlert');
+            const codeSuccess = document.getElementById('codeSuccess');
+            const codeFailure = document.getElementById('codeFailure');
+
+            // Clear previous content
+            outputElement.textContent = '';
+            // Hide both alerts initially
+            successAlert.style.display = 'none';
+            failureAlert.style.display = 'none';
+            // Function to append text character by character with a delay
+            async function appendTextCharByChar(text, element, delay) {
+                for (const char of text) {
+                    element.textContent += char;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            // Call the function to display the output character by character with a delay
+            if (typeof data.status === 'undefined') {
+                // Handle the case where data.status is undefined or not found
+                codeSuccess.style.display = 'none';
+                codeFailure.style.display = 'none';
+            } else if (data.status) {
+                // Show the success alert
+                codeSuccess.style.display = 'inline-block';
+                codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
+                codeFailure.style.display = 'none'; // Hide the failure alert
+            } else {
+                // Show the failure alert
+                codeFailure.style.display = 'inline-block';
+                codeSuccess.style.display = 'none'; // Hide the success alert
+            }
+            await appendTextCharByChar(data.result, outputElement, 5);
+            // Display the appropriate alert based on the testcase result
+            checkCodeButton.disabled = false;
+            runCodeButton.disabled = false;
+        });
+        checkCodeButton.addEventListener('click', async () => {
+            const code = editor.getValue();
+            checkCodeButton.disabled = true;
+            runCodeButton.disabled = true;
+            const response = await fetch(`/check`, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'code': code,
+                    'lang': language,
+                    'type': "check",
+                    'problem_id': problem_id
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            const data = await response.json();
+            // Get the output element and testcase result element
+            const outputElement = document.getElementById('output');
+            const successAlert = document.getElementById('successAlert');
+            const failureAlert = document.getElementById('failureAlert');
+            const codeSuccess = document.getElementById('codeSuccess');
+            const codeFailure = document.getElementById('codeFailure');
+
+            // Clear previous content
+            outputElement.textContent = '';
+            // Hide both alerts initially
+            successAlert.style.display = 'none';
+            failureAlert.style.display = 'none';
+            // Function to append text character by character with a delay
+            async function appendTextCharByChar(text, element, delay) {
+                for (const char of text) {
+                    element.textContent += char;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            // Call the function to display the output character by character with a delay
+            console.log(data.status)
+            if (typeof data.status === 'undefined') {
+                // Handle the case where data.status is undefined or not found
+                codeSuccess.style.display = 'none';
+                codeFailure.style.display = 'none';
+            } else if (data.status) {
+                // Show the success alert
+                codeSuccess.style.display = 'inline-block';
+                codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
+                codeFailure.style.display = 'none'; // Hide the failure alert
+            } else {
+                // Show the failure alert
+                codeFailure.style.display = 'inline-block';
+                codeSuccess.style.display = 'none'; // Hide the success alert
+            }
+            await appendTextCharByChar(data.result, outputElement, 5);
+            // Display the appropriate alert based on the testcase result
+            if (data.testcase_passed) {
+                // Show the success alert
+                successAlert.style.display = 'block';
+            } else {
+                // Show the failure alert
+                failureAlert.style.display = 'block';
+            }
+            checkCodeButton.disabled = false;
+            runCodeButton.disabled = false;
+        });
+        // Function to reset the editor to default code
+        function resetToDefaultCode() {
+            if (language === 'python') {
+                const defaultCode = {{ problem_info.boiler_code_python | tojson
+            }
+        };
+        editor.setValue(defaultCode);
                 } else if (language === 'cpp') {
-                    editor.setOption('mode', 'text/x-c++src');
-                    editor.setValue(storedCode || '');
+            const defaultCode = {{ problem_info.boiler_code_cpp | tojson
+        }};
+        editor.setValue(defaultCode);
                 } else if (language === 'java') {
-                    editor.setOption('mode', 'text/x-java');
-                    editor.setValue(storedCode || '');
+            const defaultCode = {{ problem_info.boiler_code_java | tojson
+        }};
+        editor.setValue(defaultCode);
                 }
-            }
-            
-                    
-            // Call the setEditorMode function when the page loads and when the language selection changes
-            setEditorMode();
-            
-            languageSelect.addEventListener('change', function() {
-                const selectedOption = languageSelect.options[languageSelect.selectedIndex];
-                language = selectedOption.value; // Update the 'language' variable
-                setEditorMode(); // Set the appropriate CodeMirror mode and value
-            });
-                document.querySelector('form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const code = editor.getValue();
-                checkCodeButton.disabled = true;
-                runCodeButton.disabled = true;
-                const response = await fetch(`/check`, {
-                    method: 'POST',
-                    body: new URLSearchParams({
-                        'code': code,
-                        'lang': language,
-                        'type': "run",
-                        'problem_id': problem_id
-                    }),
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                });
-                const data = await response.json();
-                // Get the output element and testcase result element
-                const outputElement = document.getElementById('output');
-                const successAlert = document.getElementById('successAlert');
-                const failureAlert = document.getElementById('failureAlert');
-                const codeSuccess = document.getElementById('codeSuccess');
-                const codeFailure = document.getElementById('codeFailure');
 
-                // Clear previous content
-                outputElement.textContent = '';
-                // Hide both alerts initially
-                successAlert.style.display = 'none';
-                failureAlert.style.display = 'none';
-                // Function to append text character by character with a delay
-                async function appendTextCharByChar(text, element, delay) {
-                    for (const char of text) {
-                        element.textContent += char;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    }
-                }
-                // Call the function to display the output character by character with a delay
-                if (typeof data.status === 'undefined') {
-                    // Handle the case where data.status is undefined or not found
-                    codeSuccess.style.display = 'none';
-                    codeFailure.style.display = 'none';
-                } else if (data.status) {
-                    // Show the success alert
-                    codeSuccess.style.display = 'inline-block';
-                    codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
-                    codeFailure.style.display = 'none'; // Hide the failure alert
+            }
+
+        // Add an event listener to the "Reset to Default Code" button
+        const resetCodeButton = document.getElementById('reset-code-button');
+        resetCodeButton.addEventListener('click', () => {
+            $('#resetCodeModal').modal('show');
+        });
+
+        // Handle the user's choice in the modal
+        const confirmResetButton = document.getElementById('confirmReset');
+        confirmResetButton.addEventListener('click', () => {
+            // Reset the code to the default code
+            resetToDefaultCode();
+            // Close the modal
+            $('#resetCodeModal').modal('hide');
+        });
+        // Function to store code in local storage
+        function storeCodeInLocalStorage() {
+            const code = editor.getValue();
+            localStorage.setItem(`${language}_code`, code);
+        }
+
+        // Automatically update code in local storage every 5 seconds
+        setInterval(storeCodeInLocalStorage, 100);
+        function printLocalStorageContent() {
+            console.log("Local Storage Content:");
+
+            // List of languages
+            const languages = ['python', 'cpp', 'java'];
+
+            languages.forEach(lang => {
+                const storedCode = localStorage.getItem(`${lang}_code`);
+                if (storedCode) {
+                    console.log(`Language: ${lang}`);
+                    console.log(storedCode);
                 } else {
-                    // Show the failure alert
-                    codeFailure.style.display = 'inline-block';
-                    codeSuccess.style.display = 'none'; // Hide the success alert
+                    console.log(`Language: ${lang} - Local storage is empty.`);
                 }
-                await appendTextCharByChar(data.result, outputElement, 5);
-                // Display the appropriate alert based on the testcase result
-                checkCodeButton.disabled = false;
-                runCodeButton.disabled = false;
             });
-            checkCodeButton.addEventListener('click', async () => {
-                const code = editor.getValue();
-                checkCodeButton.disabled = true;
-                runCodeButton.disabled = true;
-                const response = await fetch(`/check`, {
-                    method: 'POST',
-                    body: new URLSearchParams({
-                        'code': code,
-                        'lang': language,
-                        'type': "check",
-                        'problem_id': problem_id
-                    }),
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                });
-                const data = await response.json();
-                // Get the output element and testcase result element
-                const outputElement = document.getElementById('output');
-                const successAlert = document.getElementById('successAlert');
-                const failureAlert = document.getElementById('failureAlert');
-                const codeSuccess = document.getElementById('codeSuccess');
-                const codeFailure = document.getElementById('codeFailure');
-
-                // Clear previous content
-                outputElement.textContent = '';
-                // Hide both alerts initially
-                successAlert.style.display = 'none';
-                failureAlert.style.display = 'none';
-                // Function to append text character by character with a delay
-                async function appendTextCharByChar(text, element, delay) {
-                    for (const char of text) {
-                        element.textContent += char;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    }
-                }
-                // Call the function to display the output character by character with a delay
-                console.log(data.status)
-                if (typeof data.status === 'undefined') {
-                    // Handle the case where data.status is undefined or not found
-                    codeSuccess.style.display = 'none';
-                    codeFailure.style.display = 'none';
-                } else if (data.status) {
-                    // Show the success alert
-                    codeSuccess.style.display = 'inline-block';
-                    codeSuccess.textContent = `Code Executed Successfully in ${data.time} ms!`;
-                    codeFailure.style.display = 'none'; // Hide the failure alert
-                } else {
-                    // Show the failure alert
-                    codeFailure.style.display = 'inline-block';
-                    codeSuccess.style.display = 'none'; // Hide the success alert
-                }
-                await appendTextCharByChar(data.result, outputElement, 5);
-                // Display the appropriate alert based on the testcase result
-                if (data.testcase_passed) {
-                    // Show the success alert
-                    successAlert.style.display = 'block';
-                } else {
-                    // Show the failure alert
-                    failureAlert.style.display = 'block';
-                }
-                checkCodeButton.disabled = false;
-                runCodeButton.disabled = false;
-            });
-              // Function to reset the editor to default code
-            function resetToDefaultCode() {
-                if (language === 'python') {
-                    const defaultCode = {{ problem_info.boiler_code_python | tojson }};
-                    editor.setValue(defaultCode);
-                } else if (language === 'cpp') {
-                    const defaultCode = {{ problem_info.boiler_code_cpp | tojson }};
-                    editor.setValue(defaultCode);
-                } else if (language === 'java') {
-                    const defaultCode = {{ problem_info.boiler_code_java | tojson }};
-                    editor.setValue(defaultCode);
-                }
-
-            }
-            
-            // Add an event listener to the "Reset to Default Code" button
-            const resetCodeButton = document.getElementById('reset-code-button');
-            resetCodeButton.addEventListener('click', () => {
-                $('#resetCodeModal').modal('show');
-            });
-        
-            // Handle the user's choice in the modal
-            const confirmResetButton = document.getElementById('confirmReset');
-            confirmResetButton.addEventListener('click', () => {
-                // Reset the code to the default code
-                resetToDefaultCode();
-                // Close the modal
-                $('#resetCodeModal').modal('hide');
-            });
-            // Function to store code in local storage
-            function storeCodeInLocalStorage() {
-                const code = editor.getValue();
-                localStorage.setItem(`${language}_code`, code);
-            }
-
-            // Automatically update code in local storage every 5 seconds
-            setInterval(storeCodeInLocalStorage, 1);
-            function printLocalStorageContent() {
-                console.log("Local Storage Content:");
-            
-                // List of languages
-                const languages = ['python', 'cpp', 'java'];
-            
-                languages.forEach(lang => {
-                    const storedCode = localStorage.getItem(`${lang}_code`);
-                    if (storedCode) {
-                        console.log(`Language: ${lang}`);
-                        console.log(storedCode);
-                    } else {
-                        console.log(`Language: ${lang} - Local storage is empty.`);
-                    }
-                });
-            }
-            const printLocalStorageButton = document.getElementById('printLocalStorageButton');
-            printLocalStorageButton.addEventListener('click', printLocalStorageContent);
+        }
+        const printLocalStorageButton = document.getElementById('printLocalStorageButton');
+        printLocalStorageButton.addEventListener('click', printLocalStorageContent);
 
             // Function to retrieve code from local storage and update it
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
