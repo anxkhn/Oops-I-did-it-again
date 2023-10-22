@@ -32,6 +32,21 @@ db.execute("""
 """)
 
 db.execute("""
+    CREATE TABLE IF NOT EXISTS python (
+        problem_id INTEGER PRIMARY KEY,
+        problem_name TEXT,
+        problem_description TEXT,
+        test_cases TEXT,
+        constraints TEXT,
+        boiler_code_python TEXT,
+        function_call_python TEXT,
+        testing_code TEXT,
+        postitive_keywords TEXT,
+        negative_keywords TEXT
+    )
+""")
+
+db.execute("""
 CREATE TABLE IF NOT EXISTS request_logs (
     id INTEGER PRIMARY KEY,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -52,10 +67,15 @@ def log_request_info():
     db.execute("INSERT INTO request_logs (ip_address, user_agent, http_method, url) VALUES (? ,? ,? , ?)",
     ip_address, user_agent, http_method, url)
     
-@app.route('/')
-def index():
+@app.route('/problems')
+def problems():
     problems = db.execute("SELECT * from problems")
-    return render_template('index.html',problems=problems)
+    return render_template('problems.html',problems=problems)
+
+@app.route('/python_problems')
+def python_problems():
+    problems = db.execute("SELECT * from python")
+    return render_template('python_problems.html',problems=problems)
 
 @app.route('/create_sample')
 def create_sample():
@@ -146,15 +166,182 @@ def create_sample():
 
     return redirect('/') 
 
+@app.route('/create_sample_python')
+def create_sample_python():
+    db.execute("""
+    INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
+VALUES (
+    'The Quest for Truth : The Silent Mystery',
+    "Once upon a time in a quaint little village, there lived a curious and imaginative child named Alex. Alex had heard tales of a mystical forest where the truth was said to be hidden among its many secrets. Determined to uncover this truth, Alex embarked on a journey deep into the heart of the forest.
 
-@app.route('/problems/<problem_id>')
+As Alex ventured into the forest, various encounters tested the child's understanding of truth and falsehood. Here's how the story unfolds:
+
+Scene 1: The Silent Mystery
+
+Alex encountered a silent figure sitting by a tree. It was None. Curious, Alex asked, 'Are you a guardian of the forest's truth?' None remained silent, confirming the tales that None is considered False in the world of Python.
+",
+    'Test Case 1: Checking the Silent Mystery with None
+mystery_value = None
+Expected Output: True
+
+Test Case 2: Checking with a non-None value
+mystery_value = 5
+Expected Output: False
+',
+    'Avoid using the == operator for comparisons.',
+    'def check_mystery_value(mystery_value):
+	# return True or False
+', 
+    'print(check_mystery_value(None))\nprint(check_mystery_value(5))',
+    'def check_mystery_value(mystery_value):
+	if mystery_value:
+		return True
+	else:
+		return False
+','==');""")
+    db.execute("""
+    INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
+    VALUES (
+        'The Quest for Truth : The Enigmatic Riddler',
+        "Once upon a time in a quaint little village, there lived a curious and imaginative child named Alex. Alex had heard tales of a mystical forest where the truth was said to be hidden among its many secrets. Determined to uncover this truth, Alex embarked on a journey deep into the heart of the forest.
+
+As Alex ventured into the forest, various encounters tested the child's understanding of truth and falsehood. Here's how the story unfolds:
+
+Scene 2: The Enigmatic Riddler
+
+Further along the path, Alex met a mysterious person who posed a riddle. 'I speak in riddles,' the person said. 'Is this statement true or false: ''I am the Riddler''?' It turned out that the Riddler's statement was False.
+",
+        'Test Case 1: Solving the Riddlers Statement
+riddler_statement = "I am the Riddler"
+Expected Output: True
+
+Test Case 2: An Empty Riddle
+riddler_statement = ""
+Expected Output: False
+',
+        'Avoid using the == operator for comparisons.',
+        'def check_riddler_statement(riddler_statement):
+	# return True or False
+', 
+        'print(check_riddler_statement("I am the Riddler"))\nprint(check_riddler_statement(""))',
+        'def check_riddler_statement(riddler_statement):
+	if riddler_statement:
+		return True
+	else:
+		return False
+','==');""")
+    db.execute("""
+    INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
+    VALUES (
+        'The Quest for Truth : The Tale of the Null Wizard',
+        "Once upon a time in a quaint little village, there lived a curious and imaginative child named Alex. Alex had heard tales of a mystical forest where the truth was said to be hidden among its many secrets. Determined to uncover this truth, Alex embarked on a journey deep into the heart of the forest.
+
+As Alex ventured into the forest, various encounters tested the child's understanding of truth and falsehood. Here's how the story unfolds:
+
+Scene 3: The Tale of the Null Wizard
+
+In a clearing, Alex found an old book with a spell called 'Nullify.' When cast, it had a peculiar effect - it set things to 0. Alex cast the spell on a nearby object, turning it into 0.
+",
+        'Test Case 1: Casting the Nullify Spell
+spell_result = 0
+Expected Output: True
+
+Test Case 2: A Different Spell Result
+spell_result = 42
+Expected Output: False
+',
+        'Avoid using the == operator for comparisons.',
+        'def check_spell_result(spell_result):
+	# return True or False
+', 
+        'print(check_spell_result(0))\nprint(check_spell_result(42))',
+        'def check_spell_result(spell_result):
+	if spell_result == 0:
+		return True
+	else:
+		return False
+','==');""")
+    db.execute("""
+    INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
+    VALUES (
+        'The Quest for Truth : The Ghostly Whisper',
+        "Once upon a time in a quaint little village, there lived a curious and imaginative child named Alex. Alex had heard tales of a mystical forest where the truth was said to be hidden among its many secrets. Determined to uncover this truth, Alex embarked on a journey deep into the heart of the forest.
+
+As Alex ventured into the forest, various encounters tested the child's understanding of truth and falsehood. Here's how the story unfolds:
+
+Scene 4: The Ghostly Whisper
+
+In a misty part of the forest, a voice echoed, 'I exist, but I'm empty.' It was an empty string, and it too was considered False in the forest of Python.
+",
+        'Test Case 1: The Ghostly Whisper Speaks
+ghostly_whisper = ""
+Expected Output: True
+
+Test Case 2: Whispering Something
+ghostly_whisper = "Whisper"
+Expected Output: False
+',
+        'Avoid using the == operator for comparisons.',
+        'def check_ghostly_whisper(ghostly_whisper):
+	# return True or False
+', 
+        'print(check_ghostly_whisper(""))\nprint(check_ghostly_whisper("Whisper"))',
+        'def check_ghostly_whisper(ghostly_whisper):
+	if not ghostly_whisper:
+		return True
+	else:
+		return False
+','==');""")
+    db.execute("""
+    INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
+    VALUES (
+        'The Quest for Truth : The Guardian Trees',
+        "Once upon a time in a quaint little village, there lived a curious and imaginative child named Alex. Alex had heard tales of a mystical forest where the truth was said to be hidden among its many secrets. Determined to uncover this truth, Alex embarked on a journey deep into the heart of the forest.
+
+As Alex ventured into the forest, various encounters tested the child's understanding of truth and falsehood. Here's how the story unfolds:
+
+Scene 5: The Guardian Trees
+
+As Alex ventured deeper, they encountered two guardian trees. One was an empty list, and the other an empty dictionary. They stood silently, representing the emptiness that is considered False in the forest.
+",
+        'Test Case 1: The Silent Guardians
+guardian_list = []
+guardian_dict = {}
+Expected Output: True
+
+Test Case 2: The Active Guardians
+guardian_list = [1, 2, 3]
+guardian_dict = {"key": "value"}
+Expected Output: False
+',
+        'Avoid using the == operator for comparisons.',
+        'def check_guardian_trees(guardian_list, guardian_dict):
+	# return True or False
+', 
+        'print(check_guardian_trees([], {}))\nprint(check_guardian_trees([1, 2, 3], {"key": "value"}))',
+        'def check_guardian_trees(guardian_list, guardian_dict):
+	if not guardian_list and not guardian_dict:
+		return True
+	else:
+		return False
+','==');""")
+
+    return redirect('/index_python') 
+
+
+@app.route('/problem/<problem_id>')
 def problem_view(problem_id):
     problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
     return render_template('questions.html', problem_info=problem_info)
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
+@app.route('/python_problem/<problem_id>')
+def problem_view_python(problem_id):
+    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[0]
+    return render_template('questions_python.html', problem_info=problem_info)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/check', methods=['POST'])
@@ -194,7 +381,9 @@ def check_code():
         runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
         
         testcase_passed = False
-        
+        code = testing_code +"\n"+ function_call_python
+        code = code.replace('\t', '    ')
+
         if type == "check":
             testing_code_result = subprocess.check_output(['python', '-c', testing_code +"\n"+ function_call_python], stderr=subprocess.STDOUT, text=True)
             testcase_passed = result.strip() == testing_code_result.strip()
@@ -219,6 +408,62 @@ def check_code():
             "status": False
         }
         return jsonify(response)
+    
+@app.route('/check_python', methods=['POST'])
+def check_python_code():
+    code = request.form['code']
+    problem_id = request.form['problem_id']
+    lang = request.form['lang']
+    type = request.form['type']
+
+    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[0]
+    boiler_code_python = problem_info['boiler_code_python']
+    function_call_python = problem_info["function_call_python"]
+
+    testing_code = problem_info["testing_code"]
+
+    if code == boiler_code_python:
+        response = {
+            "testcase_passed": False,
+            "result": "Please enter code.",
+        }
+        return jsonify(response)        
+
+    # print(code +"\n"+ function_call_python)
+    try:
+        if lang == "python":
+            result,runtime = compile_python(code+"\n"+function_call_python)
+        runtime = runtime * 1000  # Convert seconds to milliseconds and multiply by 1000
+        runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
+        
+        testcase_passed = False
+        
+        if type == "check":
+            testing_code_result = subprocess.check_output(['python', '-c', testing_code +"\n"+ function_call_python], stderr=subprocess.STDOUT, text=True)
+            testcase_passed = result.strip() == testing_code_result.strip()
+        if runtime == 0:
+            status = False
+        else:
+            status = True
+        if problem_info["negative_keywords"] in code:
+            result = f"Your code should not use {problem_info['negative_keywords']} in solution. \nOutput : \n{result}" 
+        # Compare the results of the two executions
+        # Return the result and testcase_passed as JSON
+        response = {
+            "testcase_passed": testcase_passed,
+            "result": result,
+            "status": status,
+            "time" : runtime_formatted
+        }
+        return jsonify(response)
+    except subprocess.CalledProcessError as e:
+        response = {
+            "testcase_passed": False,
+            "result": f"There is an error in your code, please check again.\nError: {e.output}",
+            "status": False
+        }
+        return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

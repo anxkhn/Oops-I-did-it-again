@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 style="font-family: 'Gabarito', sans-serif;">Trivial Problems</h1>
+    <h4 style="font-family: 'Gabarito', sans-serif;">Here are a set of beginner-friendly easy problems for you to explore. These problems are designed to support programming in Python, C++, and Java, so feel free to put your problem-solving skills to the test.
+    </h4>
+    
+    <br>
+    <div class="row">
+        {% for problem in problems %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ problem.problem_name }}</h5>
+                    <p class="card-text">{{ problem.problem_description }}</p>
+                    <a href="/problem/{{ problem.problem_id }}" class="btn btn-primary">Solve Problem</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

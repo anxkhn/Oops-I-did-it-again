@@ -1,46 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Roboto+Mono&display=swap" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
-        <title style="font-family: 'Gabarito', sans-serif;">Available Problems</title>
-        <style>
-            .card {
-                font-family: 'Gabarito', sans-serif;
-            }
-        </style>
-    </head>
-    <body style="font-family: 'Gabarito', sans-serif;">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container d-flex justify-content-between">
-                <a class="navbar-brand" href="/">OOPs, I did it again!</a>
-                <div class="d-flex justify-content-center align-items-center">
-                    <p class="navbar-text m-0 me-3">Developed by Anas Khan</p>
-                    <a href="https://github.com/anxkhn" target="_blank" class="me-3">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://twitter.com/anxkhn" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                    </a>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4" style="font-size: 28px; color: #007bff;">Welcome to 'Oops I Did It Again'</h1>
+                    <p class="card-text" style="font-size: 18px; color: #333;">Do you ever find yourself slipping into C++-like syntax when writing Python code? You're not alone. I'm here to help you overcome that challenge, just as I have on my own journey. As a Python enthusiast, I often exclaimed, 'Oops, I did it again,' whenever my muscle memory led me down the non-Pythonic path. This website is the result of my commitment to breaking these habits and helping you do the same.</p>
+                    <p class="card-text" style="font-size: 18px; color: #333;">My goal is simple: to guide you in writing Python code that adheres to PEP 8 best practices, is clean, readable, and truly Pythonic. Whether you're a Python beginner or a seasoned developer, you'll find valuable insights here.</p>
+                    <p class="card-text" style="font-size: 18px; color: #333;">Let's illustrate the significance of Pythonic coding with an example. Consider the scenario where you want to check if a variable 'a' is true:</p>
+                    <p class="card-text" style="font-size: 20px; color: #333; font-weight: bold;">Non-Pythonic Approach</p>
+                    <pre class="card-text" style="font-size: 16px; color: #555;">
+                        <code>
+                            <!-- Non-Pythonic Approach -->
+                            if foo == True:
+                                # Do something
+                        </code>
+                    </pre>
+                    <p class="card-text" style="font-size: 20px; color: #333; font-weight: bold;">Pythonic Approach</p>
+                    <pre class="card-text" style="font-size: 16px; color: #555;">
+                        <code>
+                            <!-- Pythonic Approach -->
+                            if foo:
+                                # Do the same thing
+                        </code>
+                    </pre>
+                    <p class="card-text" style="font-size: 18px; color: #333;">In the non-Pythonic approach, you explicitly check if 'a' is equal to 'True.' However, in Python, you can simply use 'if a' to achieve the same result. This is more concise, readable, and aligned with Python's idiomatic style, making your code cleaner and more elegant.</p>
+                    <p class="card-text" style="font-size: 18px; color: #333;">'Oops I Did It Again' is all about your quest for Pythonic excellence, acknowledging those moments when you slip back into non-Pythonic habits and exclaim, 'Oops, I did it again.' I'll explore various topics, including coding style, naming conventions, Python's built-in functions and libraries, and the idiomatic patterns that define Python. This website is your source for practical advice on writing code that's efficient, maintainable, and aligns with the Python community's standards.</p>
+                    <p class="card-text" style="font-size: 18px; color: #333;">In essence, 'Oops I Did It Again' is your partner on the journey to becoming a proficient Python programmer, eliminating those 'Oops' moments. It equips you with best practices and guidelines for crafting code that's idiomatic and in harmony with the Python community's style and conventions.</p>
+                    <p class="card-text" style="font-size: 18px; color: #333; font-weight: bold;">Bid farewell to non-Pythonic code practices and embark on your path to Pythonic greatness with 'Oops I Did It Again'!</p>
                 </div>
             </div>
-        </nav>
-        <div class="container my-5">
-            <h1 style="font-family: 'Gabarito', sans-serif;">Available Problems</h1>
-            <br>
-            <div class="row"> {% for problem in problems %} <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ problem.problem_name }}</h5>
-                            <p class="card-text">{{ problem.problem_description }}</p>
-                            <a href="/problems/{{ problem.problem_id }}" class="btn btn-primary">Solve Problem</a>
-                        </div>
-                    </div>
-                </div> {% endfor %} </div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+{% endblock %}

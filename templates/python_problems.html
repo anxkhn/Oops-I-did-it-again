@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Python Problems{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 style="font-family: 'Gabarito', sans-serif;">Python Problems</h1>
+
+    <h4 style="font-family: 'Gabarito', sans-serif;">Solve problems designed to test your Pythonic correctness. 
+    Practice these problems to write more concise, readable, and adhering to the PEP 8 style guidelines, making your code cleaner and more elegant.
+    </h4>
+    <br>
+    <div class="row">
+        {% for problem in problems %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ problem.problem_name }}</h5>
+                    <p class="card-text">{{ problem.problem_description }}</p>
+                    <a href="/python_problem/{{ problem.problem_id }}" class="btn btn-primary">Solve Problem</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

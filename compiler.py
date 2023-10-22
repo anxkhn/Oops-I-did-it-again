@@ -4,6 +4,7 @@ import random
 import time
 import string
 
+
 temp_folder_name = 'COMPILER_TEMP'
 current_directory = os.getcwd()
 temp_folder_path = os.path.join(current_directory, temp_folder_name)
@@ -52,6 +53,7 @@ def compile_cpp(code):
         return (result,runtime)
 
 def compile_python(code):
+    code = code.replace('\t', '    ')
     try:
         start_time = time.time()
         result = subprocess.check_output(['python', '-c',code], stderr=subprocess.STDOUT, text=True)

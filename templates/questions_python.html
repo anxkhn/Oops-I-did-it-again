@@ -63,17 +63,17 @@
             <div class="card rounded">
                 <div class="card-body">
                     <!-- Buttons for the code editor -->
-                    <form method="post" action="/check">
+                    <form method="post" action="/check_python">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 style="font-family: 'Gabarito', sans-serif; display: inline-block;">Code Editor</h3>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label for="languageSelect">Select a language:</label>
                                 <select class="form-control" id="languageSelect">
                                     <option value="python" selected>Python</option>
                                     <option value="cpp">C++</option>
                                     <option value="java">Java</option>
                                 </select>
-                            </div>
+                            </div>-->
                             <!--
                                 <button id="clearLocalStorageButton" class="btn btn-danger">Clear Local Storage (testing)</button>
                             -->
@@ -121,22 +121,17 @@
     </div>
 </div>
 <script>
-    const languageSelect = document.getElementById('languageSelect');
-    let language = languageSelect.options[languageSelect.selectedIndex].value;
+    let language = "python";
     // Function to retrieve the default code for a specific language from problem_info
     function getDefaultCodeForLanguage(lang) {
         if (lang === 'python') {
             return {{ problem_info.boiler_code_python | tojson }};
-        } else if (lang === 'cpp') {
-            return {{ problem_info.boiler_code_cpp | tojson }};
-        } else if (lang === 'java') {
-            return {{ problem_info.boiler_code_java | tojson }};
         }
     }
 
     // Function to store code in local storage for all languages on page load if not already stored
     function storeAllCodeOnLoad() {
-        const languages = ['python', 'cpp', 'java'];
+        const languages = ['python'];
         let shouldStoreDefaultCode = false;
     
         languages.forEach(lang => {
@@ -164,12 +159,6 @@
         if (language === 'python') {
             editor.setOption('mode', 'python');
             editor.setValue(storedCode || ''); // Set the code from local storage or an empty string if not found
-        } else if (language === 'cpp') {
-            editor.setOption('mode', 'text/x-c++src');
-            editor.setValue(storedCode || '');
-        } else if (language === 'java') {
-            editor.setOption('mode', 'text/x-java');
-            editor.setValue(storedCode || '');
         }
     }
     
@@ -177,17 +166,12 @@
     // Call the setEditorMode function when the page loads and when the language selection changes
     setEditorMode();
     
-    languageSelect.addEventListener('change', function() {
-        const selectedOption = languageSelect.options[languageSelect.selectedIndex];
-        language = selectedOption.value; // Update the 'language' variable
-        setEditorMode(); // Set the appropriate CodeMirror mode and value
-    });
         document.querySelector('form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const code = editor.getValue();
         checkCodeButton.disabled = true;
         runCodeButton.disabled = true;
-        const response = await fetch(`/check`, {
+        const response = await fetch(`/check_python`, {
             method: 'POST',
             body: new URLSearchParams({
                 'code': code,
@@ -243,7 +227,7 @@
         const code = editor.getValue();
         checkCodeButton.disabled = true;
         runCodeButton.disabled = true;
-        const response = await fetch(`/check`, {
+        const response = await fetch(`/check_python`, {
             method: 'POST',
             body: new URLSearchParams({
                 'code': code,
@@ -308,14 +292,7 @@
         if (language === 'python') {
             const defaultCode = {{ problem_info.boiler_code_python | tojson }};
             editor.setValue(defaultCode);
-        } else if (language === 'cpp') {
-            const defaultCode = {{ problem_info.boiler_code_cpp | tojson }};
-            editor.setValue(defaultCode);
-        } else if (language === 'java') {
-            const defaultCode = {{ problem_info.boiler_code_java | tojson }};
-            editor.setValue(defaultCode);
-        }
-
+        } 
     }
     
     // Add an event listener to the "Reset to Default Code" button
@@ -344,7 +321,7 @@
         console.log("Local Storage Content:");
     
         // List of languages
-        const languages = ['python', 'cpp', 'java'];
+        const languages = ['python'];
     
         languages.forEach(lang => {
             const storedCode = localStorage.getItem(`${window.location.href}_${lang}_code`);
