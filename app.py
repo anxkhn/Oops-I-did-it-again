@@ -1,12 +1,39 @@
-from flask import Flask, render_template, request, jsonify,redirect
-from cs50 import SQL
-from compiler import compile_python,compile_cpp,compile_java
+import base64
+import io
+import os
 import subprocess
 import time
-import os
+from datetime import datetime
+from functools import wraps
 
+import cv2
+import face_recognition
+import numpy as np
+from cs50 import SQL
+from flask import (Flask, jsonify, redirect, render_template, request, session,
+                   url_for)
+from flask_session import Session
+from PIL import Image
+
+from compiler import compile_cpp, compile_java, compile_python
 
 app = Flask(__name__)
+
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
 
 try:
     db = SQL("sqlite:///problems.db")
@@ -14,7 +41,8 @@ except:
     db = SQL("sqlite:////home/oopsididit/mysite/problems.db")
 
 
-db.execute("""
+db.execute(
+    """
     CREATE TABLE IF NOT EXISTS problems (
         problem_id INTEGER PRIMARY KEY,
         problem_name TEXT,
@@ -29,9 +57,11 @@ db.execute("""
         function_call_java TEXT,
         testing_code TEXT
     )
-""")
+"""
+)
 
-db.execute("""
+db.execute(
+    """
     CREATE TABLE IF NOT EXISTS python (
         problem_id INTEGER PRIMARY KEY,
         problem_name TEXT,
@@ -44,9 +74,11 @@ db.execute("""
         postitive_keywords TEXT,
         negative_keywords TEXT
     )
-""")
+"""
+)
 
-db.execute("""
+db.execute(
+    """
 CREATE TABLE IF NOT EXISTS request_logs (
     id INTEGER PRIMARY KEY,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -55,31 +87,84 @@ CREATE TABLE IF NOT EXISTS request_logs (
     http_method TEXT,
     url TEXT
 )
-""")
+"""
+)
+
+db.execute(
+    """
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE,
+    face_encoding BLOB
+)
+"""
+)
+
+db.execute(
+    """
+    CREATE TABLE IF NOT EXISTS submissions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        problem_id INTEGER,
+        username TEXT,
+        code TEXT,
+        language TEXT,
+        passed BOOLEAN,
+        submission_time DATETIME,
+        FOREIGN KEY (problem_id) REFERENCES problems(problem_id),
+        FOREIGN KEY (username) REFERENCES users(username)
+    )
+    """
+)
+
 
 @app.before_request
 def log_request_info():
     # Log request details to the database
     ip_address = request.remote_addr
-    user_agent = request.headers.get('User-Agent')
+    user_agent = request.headers.get("User-Agent")
     http_method = request.method
     url = request.url
-    db.execute("INSERT INTO request_logs (ip_address, user_agent, http_method, url) VALUES (? ,? ,? , ?)",
-    ip_address, user_agent, http_method, url)
-    
-@app.route('/problems')
+    db.execute(
+        "INSERT INTO request_logs (ip_address, user_agent, http_method, url) VALUES (? ,? ,? , ?)",
+        ip_address,
+        user_agent,
+        http_method,
+        url,
+    )
+
+
+def login_required(f):
+    """
+    Decorate routes to require login.
+
+    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
+    """
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("username") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+@app.route("/problems")
 def problems():
     problems = db.execute("SELECT * from problems")
-    return render_template('problems.html',problems=problems)
+    return render_template("problems.html", problems=problems)
 
-@app.route('/python_problems')
+
+@app.route("/python_problems")
 def python_problems():
     problems = db.execute("SELECT * from python")
-    return render_template('python_problems.html',problems=problems)
+    return render_template("python_problems.html", problems=problems)
 
-@app.route('/create_sample')
+
+@app.route("/create_sample")
 def create_sample():
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code_python, boiler_code_cpp, testing_code, function_call_cpp, function_call_python, boiler_code_java, function_call_java)
     VALUES (
         'Sum of Squares',
@@ -94,9 +179,11 @@ def create_sample():
         'public class Solution {\n    public static int square(int n) {\n        // return the answer\n    }\n}',
         'public static void main(String[] args) {\n    int n = 5;\n    System.out.println(Solution.square(n));\n    n = 8;\n    System.out.println(Solution.square(n));\n}\n}'
     );
-""")
+"""
+    )
 
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code_python, boiler_code_cpp, testing_code, function_call_cpp, function_call_python, boiler_code_java, function_call_java)
     VALUES (
         'Sum of Integers',
@@ -111,9 +198,11 @@ def create_sample():
         'public class Solution {\n    public static int calculateSum(int n) {\n        // return the answer\n    }\n}',
         'public static void main(String[] args) {\n    int n = 5;\n    System.out.println(Solution.calculateSum(n));\n    n = 8;\n    System.out.println(Solution.calculateSum(n));\n}\n}'
     );
-""")
+"""
+    )
 
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code_python, boiler_code_cpp, testing_code, function_call_cpp, function_call_python, boiler_code_java, function_call_java)
     VALUES (
         'Factorial Calculation',
@@ -128,9 +217,11 @@ def create_sample():
         'public class Solution {\n    public static int calculateFactorial(int n) {\n        // return the answer\n    }\n}',
         'public static void main(String[] args) {\n    int n = 5;\n    System.out.println(Solution.calculateFactorial(n));\n    n = 0;\n    System.out.println(Solution.calculateFactorial(n));\n}\n}'
     );
-""")
+"""
+    )
 
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code_python, boiler_code_cpp, testing_code, function_call_cpp, function_call_python, boiler_code_java, function_call_java)
     VALUES (
         'Palindrome Check',
@@ -145,9 +236,11 @@ def create_sample():
         'public class Solution {\n    public static boolean isPalindrome(String s) {\n        // return the answer\n    }\n}',
         'public static void main(String[] args) {\n    String s = "racecar";\n    System.out.println(Solution.isPalindrome(s));\n    s = "hello";\n    System.out.println(Solution.isPalindrome(s));\n}\n}'
     );
-""")
+"""
+    )
 
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO problems (problem_name, problem_description, test_cases, constraints, boiler_code_python, boiler_code_cpp, testing_code, function_call_cpp, function_call_python, boiler_code_java, function_call_java)
     VALUES (
         'Fibonacci Series',
@@ -162,13 +255,16 @@ def create_sample():
         'import java.util.List;\nimport java.util.ArrayList;\n    public class Solution {\n    public static List<Integer> generateFibonacci(int n) {\n        // return the answer\n    }\n',
         'public static void main(String[] args) {\n    int n = 5;\n    List<Integer> result = Solution.generateFibonacci(n);\n    for (int num : result) {\n        System.out.print(num + " ");\n    }\n    System.out.println();\n    n = 8;\n    result = Solution.generateFibonacci(n);\n    for (int num : result) {\n        System.out.print(num + " ");\n    }\n    System.out.println();\n}\n}'
     );
-""")
+"""
+    )
 
-    return redirect('/') 
+    return redirect("/")
 
-@app.route('/create_sample_python')
+
+@app.route("/create_sample_python")
 def create_sample_python():
-    db.execute("""
+    db.execute(
+        """
     INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
 VALUES (
     'The Quest for Truth : The Silent Mystery',
@@ -198,8 +294,10 @@ Expected Output: False
 		return True
 	else:
 		return False
-','==');""")
-    db.execute("""
+','==');"""
+    )
+    db.execute(
+        """
     INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
     VALUES (
         'The Quest for Truth : The Enigmatic Riddler',
@@ -229,8 +327,10 @@ Expected Output: False
 		return True
 	else:
 		return False
-','==');""")
-    db.execute("""
+','==');"""
+    )
+    db.execute(
+        """
     INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
     VALUES (
         'The Quest for Truth : The Tale of the Null Wizard',
@@ -260,8 +360,10 @@ Expected Output: False
 		return True
 	else:
 		return False
-','==');""")
-    db.execute("""
+','==');"""
+    )
+    db.execute(
+        """
     INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
     VALUES (
         'The Quest for Truth : The Ghostly Whisper',
@@ -291,8 +393,10 @@ Expected Output: False
 		return True
 	else:
 		return False
-','==');""")
-    db.execute("""
+','==');"""
+    )
+    db.execute(
+        """
     INSERT INTO python (problem_name, problem_description, test_cases, constraints, boiler_code_python, function_call_python, testing_code,negative_keywords)
     VALUES (
         'The Quest for Truth : The Guardian Trees',
@@ -324,68 +428,95 @@ Expected Output: False
 		return True
 	else:
 		return False
-','==');""")
+','==');"""
+    )
 
-    return redirect('/index_python') 
+    return redirect("/index_python")
 
 
-@app.route('/problem/<problem_id>')
+@app.route("/problem/<problem_id>")
 def problem_view(problem_id):
-    problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
-    return render_template('questions.html', problem_info=problem_info)
+    problem_info = db.execute(
+        "SELECT * from problems WHERE problem_id = ?", problem_id
+    )[0]
+    return render_template("questions.html", problem_info=problem_info)
 
-@app.route('/python_problem/<problem_id>')
+
+@app.route("/python_problem/<problem_id>")
 def problem_view_python(problem_id):
-    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[0]
-    return render_template('questions_python.html', problem_info=problem_info)
+    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[
+        0
+    ]
+    return render_template("questions_python.html", problem_info=problem_info)
 
-@app.route('/')
+
+@app.route("/")
+@login_required
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/check', methods=['POST'])
+@app.route("/logout")
+def logout():
+    """Log user out"""
+    # Forget any username
+    session.clear()
+    # Redirect user to login form
+    return redirect("/")
+
+
+@app.route("/check", methods=["POST"])
 def check_code():
-    code = request.form['code']
-    problem_id = request.form['problem_id']
-    lang = request.form['lang']
-    type = request.form['type']
+    code = request.form["code"]
+    problem_id = request.form["problem_id"]
+    lang = request.form["lang"]
+    type = request.form["type"]
 
-    problem_info = db.execute("SELECT * from problems WHERE problem_id = ?", problem_id)[0]
-    boiler_code_cpp = problem_info['boiler_code_cpp']
-    boiler_code_python = problem_info['boiler_code_python']
-    boiler_code_java = problem_info['boiler_code_java']
+    problem_info = db.execute(
+        "SELECT * from problems WHERE problem_id = ?", problem_id
+    )[0]
+    boiler_code_cpp = problem_info["boiler_code_cpp"]
+    boiler_code_python = problem_info["boiler_code_python"]
+    boiler_code_java = problem_info["boiler_code_java"]
     function_call_cpp = problem_info["function_call_cpp"]
     function_call_python = problem_info["function_call_python"]
     function_call_java = problem_info["function_call_java"]
 
     testing_code = problem_info["testing_code"]
 
-    if code == boiler_code_python or code == boiler_code_cpp or code == boiler_code_java:
+    if (
+        code == boiler_code_python
+        or code == boiler_code_cpp
+        or code == boiler_code_java
+    ):
         response = {
             "testcase_passed": False,
             "result": "Please enter code.",
         }
-        return jsonify(response)        
+        return jsonify(response)
 
     # print(testing_code +"\n"+ function_call_python)
     try:
         if lang == "python":
-            result,runtime = compile_python(code+"\n"+function_call_python)
+            result, runtime = compile_python(code + "\n" + function_call_python)
         elif lang == "cpp":
-            result,runtime = compile_cpp(code+"\n"+function_call_cpp)
+            result, runtime = compile_cpp(code + "\n" + function_call_cpp)
         elif lang == "java":
-            result,runtime = compile_java(code+"\n"+function_call_java)
+            result, runtime = compile_java(code + "\n" + function_call_java)
 
         runtime = runtime * 1000  # Convert seconds to milliseconds and multiply by 1000
         runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
-        
+
         testcase_passed = False
-        code = testing_code +"\n"+ function_call_python
-        code = code.replace('\t', '    ')
+        code = testing_code + "\n" + function_call_python
+        code = code.replace("\t", "    ")
 
         if type == "check":
-            testing_code_result = subprocess.check_output(['python', '-c', testing_code +"\n"+ function_call_python], stderr=subprocess.STDOUT, text=True)
+            testing_code_result = subprocess.check_output(
+                ["python", "-c", testing_code + "\n" + function_call_python],
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
             testcase_passed = result.strip() == testing_code_result.strip()
         if runtime == 0:
             status = False
@@ -398,26 +529,29 @@ def check_code():
             "testcase_passed": testcase_passed,
             "result": result,
             "status": status,
-            "time" : runtime_formatted
+            "time": runtime_formatted,
         }
         return jsonify(response)
     except subprocess.CalledProcessError as e:
         response = {
             "testcase_passed": False,
             "result": f"There is an error in your code, please check again.\nError: {e.output}",
-            "status": False
+            "status": False,
         }
         return jsonify(response)
-    
-@app.route('/check_python', methods=['POST'])
-def check_python_code():
-    code = request.form['code']
-    problem_id = request.form['problem_id']
-    lang = request.form['lang']
-    type = request.form['type']
 
-    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[0]
-    boiler_code_python = problem_info['boiler_code_python']
+
+@app.route("/check_python", methods=["POST"])
+def check_python_code():
+    code = request.form["code"]
+    problem_id = request.form["problem_id"]
+    lang = request.form["lang"]
+    type = request.form["type"]
+
+    problem_info = db.execute("SELECT * from python WHERE problem_id = ?", problem_id)[
+        0
+    ]
+    boiler_code_python = problem_info["boiler_code_python"]
     function_call_python = problem_info["function_call_python"]
 
     testing_code = problem_info["testing_code"]
@@ -427,43 +561,217 @@ def check_python_code():
             "testcase_passed": False,
             "result": "Please enter code.",
         }
-        return jsonify(response)        
+        return jsonify(response)
 
     # print(code +"\n"+ function_call_python)
     try:
         if lang == "python":
-            result,runtime = compile_python(code+"\n"+function_call_python)
+            result, runtime = compile_python(code + "\n" + function_call_python)
         runtime = runtime * 1000  # Convert seconds to milliseconds and multiply by 1000
         runtime_formatted = "{:.2f}".format(runtime)  # Format to have 4 digits
-        
+
         testcase_passed = False
-        
+
         if type == "check":
-            testing_code_result = subprocess.check_output(['python', '-c', testing_code +"\n"+ function_call_python], stderr=subprocess.STDOUT, text=True)
+            testing_code_result = subprocess.check_output(
+                ["python", "-c", testing_code + "\n" + function_call_python],
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
             testcase_passed = result.strip() == testing_code_result.strip()
         if runtime == 0:
             status = False
         else:
             status = True
         if problem_info["negative_keywords"] in code:
-            result = f"Your code should not use {problem_info['negative_keywords']} in solution. \nOutput : \n{result}" 
+            result = f"Your code should not use {problem_info['negative_keywords']} in solution. \nOutput : \n{result}"
         # Compare the results of the two executions
         # Return the result and testcase_passed as JSON
         response = {
             "testcase_passed": testcase_passed,
             "result": result,
             "status": status,
-            "time" : runtime_formatted
+            "time": runtime_formatted,
         }
         return jsonify(response)
     except subprocess.CalledProcessError as e:
         response = {
             "testcase_passed": False,
             "result": f"There is an error in your code, please check again.\nError: {e.output}",
-            "status": False
+            "status": False,
         }
         return jsonify(response)
 
 
-if __name__ == '__main__':
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"]
+        captured_image = request.form["capturedImage"]
+
+        # Process the captured image
+        image_data = base64.b64decode(captured_image.split(",")[1])
+        image = Image.open(io.BytesIO(image_data))
+        img_array = np.array(image)
+
+        # Detect faces
+        face_locations = face_recognition.face_locations(img_array)
+        if not face_locations:
+            return render_template(
+                "signup.html", error="No face detected in the image. Please try again."
+            )
+
+        # Get face encoding
+        face_encoding = face_recognition.face_encodings(img_array, face_locations)[0]
+
+        # Check if face already exists
+        existing_users = db.execute("SELECT * FROM users")
+        for user in existing_users:
+            existing_encoding = np.frombuffer(user["face_encoding"])
+            if face_recognition.compare_faces([existing_encoding], face_encoding)[0]:
+                return render_template(
+                    "signup.html",
+                    error=f"Face already registered under username: {user['username']}",
+                )
+
+        # Check if username exists
+        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
+        if existing_user:
+            # Suggest new username
+            i = 1
+            while True:
+                new_username = f"{username}_{i}"
+                if not db.execute(
+                    "SELECT * FROM users WHERE username = ?", new_username
+                ):
+                    break
+                i += 1
+            return render_template(
+                "signup.html",
+                error=f"Username already exists. How about {new_username}?",
+            )
+
+        # Save user data
+        db.execute(
+            "INSERT INTO users (username, face_encoding) VALUES (?, ?)",
+            username,
+            face_encoding.tobytes(),
+        )
+
+        # Save image
+        image_path = os.path.join("static", "user_images", f"{username}.jpg")
+        image.save(image_path)
+
+        session["username"] = username
+
+        return redirect(url_for("index"))
+
+    return render_template("signup.html")
+
+
+# login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        captured_image = request.form["capturedImage"]
+
+        # Check if username exists
+        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
+        if not existing_user:
+            return render_template(
+                "login.html", error="Username not found. Please sign up first."
+            )
+
+        # Process the captured image
+        image_data = base64.b64decode(captured_image.split(",")[1])
+        image = Image.open(io.BytesIO(image_data))
+        img_array = np.array(image)
+
+        # Detect faces
+        face_locations = face_recognition.face_locations(img_array)
+        if not face_locations:
+            return render_template(
+                "login.html", error="No face detected in the image. Please try again."
+            )
+
+        # Get face encoding
+        face_encoding = face_recognition.face_encodings(img_array, face_locations)[0]
+
+        # Compare face encoding with stored encoding
+        stored_encoding = np.frombuffer(existing_user[0]["face_encoding"])
+        if face_recognition.compare_faces([stored_encoding], face_encoding)[0]:
+            session["username"] = username
+            return redirect(url_for("index"))
+        else:
+            return render_template(
+                "login.html", error="Face doesn't match. Please try again."
+            )
+
+    return render_template("login.html")
+
+
+# Add this new route for submissions
+@app.route("/submit", methods=["POST"])
+@login_required
+def submit_code():
+    code = request.form["code"]
+    problem_id = request.form["problem_id"]
+    lang = request.form["lang"]
+
+    # Perform the code check (similar to the /check route)
+    problem_info = db.execute(
+        "SELECT * from problems WHERE problem_id = ?", problem_id
+    )[0]
+    function_call = problem_info[f"function_call_{lang}"]
+    testing_code = problem_info["testing_code"]
+
+    try:
+        if lang == "python":
+            result, runtime = compile_python(code + "\n" + function_call)
+        elif lang == "cpp":
+            result, runtime = compile_cpp(code + "\n" + function_call)
+        elif lang == "java":
+            result, runtime = compile_java(code + "\n" + function_call)
+
+        testing_code_result = subprocess.check_output(
+            ["python", "-c", testing_code + "\n" + function_call],
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        passed = result.strip() == testing_code_result.strip()
+
+        # Store the submission in the database
+        db.execute(
+            "INSERT INTO submissions (problem_id, username, code, language, passed, submission_time) VALUES (?, ?, ?, ?, ?, ?)",
+            problem_id,
+            session["username"],
+            code,
+            lang,
+            passed,
+            datetime.now(),
+        )
+
+        return jsonify({"success": True, "passed": passed})
+    except subprocess.CalledProcessError as e:
+        return jsonify({"success": False, "error": str(e.output)})
+
+
+@app.route("/submissions")
+@login_required
+def view_submissions():
+    submissions = db.execute(
+        """
+        SELECT submissions.*, problems.problem_name 
+        FROM submissions 
+        JOIN problems ON submissions.problem_id = problems.problem_id 
+        WHERE username = ? 
+        ORDER BY submission_time DESC
+        """,
+        session["username"],
+    )
+    return render_template("submissions.html", submissions=submissions)
+
+
+if __name__ == "__main__":
     app.run(debug=True)

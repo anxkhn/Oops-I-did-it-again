@@ -1,0 +1,59 @@
+{% extends "layout.html" %} {% block title %}Sign Up{% endblock %} {% block
+scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    Webcam.set({
+      width: 320,
+      height: 240,
+      image_format: "jpeg",
+      jpeg_quality: 90,
+    });
+    Webcam.attach("#camera");
+
+    document
+      .getElementById("captureBtn")
+      .addEventListener("click", function () {
+        Webcam.snap(function (data_uri) {
+          document.getElementById("capturedImage").value = data_uri;
+          document.getElementById("preview").src = data_uri;
+          document.getElementById("preview").style.display = "block";
+        });
+      });
+  });
+</script>
+{% endblock %} {% block content %}
+<div class="container mt-5">
+  <h2>Sign Up</h2>
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <form action="{{ url_for('signup') }}" method="post">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Capture Photo</label>
+      <div id="camera"></div>
+      <button type="button" id="captureBtn" class="btn btn-secondary mt-2">
+        Capture
+      </button>
+      <img
+        id="preview"
+        style="display: none; margin-top: 10px"
+        width="320"
+        height="240"
+      />
+      <input type="hidden" id="capturedImage" name="capturedImage" />
+    </div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+  </form>
+</div>
+{% endblock %}

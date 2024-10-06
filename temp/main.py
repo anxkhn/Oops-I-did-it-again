@@ -1,6 +1,8 @@
-import face_recognition
-import cv2
 import os
+
+import cv2
+import face_recognition
+
 
 # Function to load and encode all faces from a given folder
 def load_and_encode_faces(folder_path):
@@ -25,6 +27,7 @@ def load_and_encode_faces(folder_path):
 
     return known_face_encodings, known_face_names
 
+
 # Function to recognize the face from a user input image
 def recognize_face_from_input(input_image_path, known_face_encodings, known_face_names):
     # Load the input image and convert it from BGR to RGB
@@ -38,7 +41,9 @@ def recognize_face_from_input(input_image_path, known_face_encodings, known_face
         input_face_encoding = input_face_encodings[0]
 
         # Compare the input face encoding to the known encodings
-        results = face_recognition.compare_faces(known_face_encodings, input_face_encoding)
+        results = face_recognition.compare_faces(
+            known_face_encodings, input_face_encoding
+        )
 
         # Check if there is a match
         if True in results:
@@ -48,6 +53,7 @@ def recognize_face_from_input(input_image_path, known_face_encodings, known_face
             return "No match found."
     else:
         return "No face found in the input image."
+
 
 # Main execution
 if __name__ == "__main__":
@@ -61,5 +67,7 @@ if __name__ == "__main__":
     input_image_path = "photo.jpg"
 
     # Recognize the face
-    result = recognize_face_from_input(input_image_path, known_face_encodings, known_face_names)
+    result = recognize_face_from_input(
+        input_image_path, known_face_encodings, known_face_names
+    )
     print(result)

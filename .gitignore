@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 /__pycache__/
+flask_session
+/flask_session/
+flask_session/
 __pycache__/
 COMPILER_TEMP/
 /COMPILER_TEMP/

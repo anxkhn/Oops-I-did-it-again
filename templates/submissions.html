@@ -1,0 +1,26 @@
+{% extends "layout.html" %} {% block title %}My Submissions{% endblock %} {%
+block content %}
+<div class="container my-5">
+  <h1>My Submissions</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Problem</th>
+        <th>Language</th>
+        <th>Status</th>
+        <th>Submission Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for submission in submissions %}
+      <tr>
+        <td>{{ submission.problem_name }}</td>
+        <td>{{ submission.language }}</td>
+        <td>{% if submission.passed %}Passed{% else %}Failed{% endif %}</td>
+        <td>{{ submission.submission_time }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
