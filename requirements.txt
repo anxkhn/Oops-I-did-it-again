@@ -1,2 +1,4 @@
 cs50==9.2.7
 Flask==3.0.0
+face_recognition
+opencv-python
