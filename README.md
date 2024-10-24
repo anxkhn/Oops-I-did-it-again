@@ -13,47 +13,48 @@ These instructions will help you get a copy of the project up and running on you
 To run this project, you will need to have the following software installed on your machine:
 
 1. **Python3**: You can download and install Python3 from the official website:
-  
-  - [Python3](https://www.python.org/downloads/)
+
+- [Python3](https://www.python.org/downloads/)
+
 2. **Java Development Kit (JDK)**: If you plan to work with Java code, you will need to have the Java Development Kit installed. You can download and install the JDK from the official Oracle website or use OpenJDK:
-  
-  - [Official Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
-  - [OpenJDK](https://openjdk.java.net/)
+
+- [Official Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
+- [OpenJDK](https://openjdk.java.net/)
+
 3. **C++ Compiler**: For working with C++ code, you will need a C++ compiler. If you're on a Linux-based system, you may already have g++ installed. On Windows, you can use MinGW or Microsoft Visual C++.
-  
-  - [MinGW for Windows](http://www.mingw.org/)
-  - [Microsoft Visual C++](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+
+- [MinGW for Windows](http://www.mingw.org/)
+- [Microsoft Visual C++](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+
 4. **pip (Python's package manager)**: If you don't already have pip installed with Python3, you can refer to the [official pip installation guide](https://pip.pypa.io/en/stable/installing/) for installation instructions.
-  
 
 You will also need to have Flask and flask_sqlalchemy packages installed to run this application. These will be installed as part of the project's requirements, as mentioned in the "Installing" section in the README.
 
 ### Installing
 
 1. Clone the repository to your local machine
-  
-  ```
-  git clone https://github.com/anxkhn/Oops-I-did-it-again.git
-  ```
-  
+
+```
+git clone https://github.com/anxkhn/Oops-I-did-it-again.git
+```
+
 2. Navigate to the project directory
-  
-  ```
-  cd Oops-I-did-it-again
-  ```
-  
+
+```
+cd Oops-I-did-it-again
+```
+
 3. Install the necessary packages
-  
-  ```
-  pip install -r requirements.txt
-  ```
-  
+
+```
+pip install -r requirements.txt
+```
+
 4. Start the application
-  
-  ```
-  flask run
-  ```
-  
+
+```
+flask run
+```
 
 The application will now be running on `http://127.0.0.1:5000`
 
@@ -84,7 +85,6 @@ To contribute to the project, please follow the [CONTRIBUTING](https://github.co
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/anxkhn/codeclip/blob/master/LICENSE) file for details.
 
-#### Debug Run 
-`sh
-rm -rf static/user_images && mkdir static/user_images && rm -f problems.db && touch problems.db &&flask run --debug
-`
+#### Debug Run
+
+`rm -rf static/user_images && mkdir static/user_images && rm -f problems.db && touch problems.db &&flask run --debug`
