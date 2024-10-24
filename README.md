@@ -83,3 +83,8 @@ To contribute to the project, please follow the [CONTRIBUTING](https://github.co
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/anxkhn/codeclip/blob/master/LICENSE) file for details.
+
+#### Debug Run 
+`sh
+rm -rf static/user_images && mkdir static/user_images && rm -f problems.db && touch problems.db &&flask run --debug
+`

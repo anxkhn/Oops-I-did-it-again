@@ -622,8 +622,13 @@ def signup():
             )
 
         # Get face encoding
-        face_encoding = face_recognition.face_encodings(img_array, face_locations)[0]
-
+        all_faces = face_recognition.face_encodings(img_array, face_locations)
+        if len(all_faces) != 1:
+            return render_template(
+                "signup.html",
+                error="Multiple faces detected. Please make sure only one face is visible.",
+            )
+        face_encoding = all_faces[0]
         # Check if face already exists
         existing_users = db.execute("SELECT * FROM users")
         for user in existing_users:
@@ -696,6 +701,14 @@ def login():
             )
 
         # Get face encoding
+        
+        all_faces = face_recognition.face_encodings(img_array, face_locations)
+        if len(all_faces) != 1:
+            return render_template(
+                "login.html",
+                error="Multiple faces detected. Please make sure only one face is visible.",
+            )
+
         face_encoding = face_recognition.face_encodings(img_array, face_locations)[0]
 
         # Compare face encoding with stored encoding
